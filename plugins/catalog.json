@@ -1,0 +1,513 @@
+{
+  "version": 1,
+  "plugins": {
+    "auto-ordering": {
+      "kind": "optional",
+      "description": "Persistent activity ordering within the existing agent-type groups, with cleared sessions last in each group.",
+      "files": [
+        {
+          "source": "plugins/auto-ordering.lua",
+          "target": "plugins/auto-ordering.lua"
+        }
+      ]
+    },
+    "agent-update": {
+      "kind": "optional",
+      "description": "Check and update Grok, Claude, Antigravity and Codex on all configured hosts, respecting mise, npm and native installations; the service updates Claude or Codex here when a session shows its update notice.",
+      "files": [
+        {
+          "source": "plugins/agent-update.lua",
+          "target": "plugins/agent-update.lua"
+        },
+        {
+          "source": "plugins/agent-update/service.lua",
+          "target": "service/agent-update.lua"
+        }
+      ]
+    },
+    "sidebar-controls": {
+      "kind": "optional",
+      "description": "Persistent on/off commands for the resources block and the dev indicator; both visible by default.",
+      "files": [
+        {
+          "source": "plugins/sidebar-controls.lua",
+          "target": "plugins/sidebar-controls.lua"
+        }
+      ]
+    },
+    "api-cost": {
+      "kind": "optional",
+      "description": "One persistent live API-equivalent total across Claude and Codex sessions on configured deck hosts.",
+      "commands": [
+        {
+          "name": "summary",
+          "description": "The API-equivalent total, collected at most every 30 seconds",
+          "args": []
+        },
+        {
+          "name": "refresh",
+          "description": "Collect the API-equivalent total now",
+          "args": []
+        }
+      ],
+      "files": [
+        {
+          "source": "plugins/api-cost.lua",
+          "target": "plugins/api-cost.lua"
+        }
+      ]
+    },
+    "dev-services": {
+      "kind": "builtin",
+      "name": "Development services",
+      "description": "Development-server controls backed by the generic owned process supervisor.",
+      "source": "plugins/dev-services/native.rs",
+      "default": true,
+      "commands": [
+        {
+          "name": "status",
+          "description": "Current development server",
+          "args": []
+        },
+        {
+          "name": "set",
+          "description": "Start or stop the development server",
+          "args": [
+            "operation",
+            "confirm"
+          ]
+        }
+      ],
+      "phone_actions": [
+        "dev"
+      ],
+      "tui_commands": [
+        "dev"
+      ]
+    },
+    "git-mirror": {
+      "kind": "builtin",
+      "name": "Repository mirror",
+      "description": "Keep agent hosts' clones current from this machine's repository, one way, after its refs change.",
+      "source": "plugins/git-mirror/native.rs",
+      "default": false
+    },
+    "host-bootstrap": {
+      "kind": "builtin",
+      "name": "Host upkeep",
+      "description": "Keep this machine's Claude Enter policy applied to its own Claude homes.",
+      "source": "plugins/host-bootstrap/native.rs",
+      "default": true
+    },
+    "login-sync": {
+      "kind": "builtin",
+      "name": "Login sync",
+      "description": "Keep provider sign-ins current across authenticated deck hosts.",
+      "source": "plugins/login-sync/native.rs",
+      "default": true,
+      "commands": [
+        {
+          "name": "status",
+          "description": "Login synchronization policy",
+          "args": []
+        }
+      ]
+    },
+    "quick-ask": {
+      "kind": "builtin",
+      "name": "Quick questions",
+      "description": "Route one-shot code and web questions to configured providers.",
+      "source": "plugins/quick-ask/native.rs",
+      "default": true,
+      "commands": [
+        {
+          "name": "ask",
+          "description": "Ask a quick question",
+          "args": [
+            "text"
+          ]
+        }
+      ],
+      "phone_actions": [
+        "ask",
+        "ask_history"
+      ],
+      "tui_commands": [
+        "ask"
+      ]
+    },
+    "ai-titles": {
+      "kind": "builtin",
+      "name": "AI titles",
+      "description": "Summarize long session names with the configured title provider.",
+      "source": "plugins/ai-titles/native.rs",
+      "default": true,
+      "commands": [
+        {
+          "name": "status",
+          "description": "Title-generation policy",
+          "args": []
+        }
+      ]
+    },
+    "security-scans": {
+      "kind": "builtin",
+      "name": "Security scans",
+      "description": "Codex Security workflow, scratch worktree lifecycle and saved reports.",
+      "source": "plugins/security-scans/native.rs",
+      "default": true,
+      "commands": [
+        {
+          "name": "list",
+          "description": "Saved security scans",
+          "args": []
+        },
+        {
+          "name": "start",
+          "description": "Start a security scan",
+          "args": [
+            "scope"
+          ]
+        }
+      ],
+      "phone_actions": [
+        "scans",
+        "scan",
+        "scan_report"
+      ],
+      "tui_commands": [
+        "scan",
+        "scans"
+      ]
+    },
+    "agent-extensions": {
+      "kind": "builtin",
+      "name": "Agent extensions",
+      "description": "Provider-specific installation of MCP servers, skills and agent plugins.",
+      "source": "plugins/agent-extensions/native.rs",
+      "default": true,
+      "commands": [
+        {
+          "name": "install",
+          "description": "Preview or apply an agent extension install",
+          "args": [
+            "source",
+            "agents",
+            "remove",
+            "confirm"
+          ]
+        },
+        {
+          "name": "skills",
+          "description": "Synchronize bundled agent skills",
+          "args": []
+        }
+      ],
+      "phone_actions": [
+        "install",
+        "skills_sync"
+      ],
+      "tui_commands": [
+        "install",
+        "uninstall",
+        "skills"
+      ]
+    },
+    "desktop": {
+      "kind": "builtin",
+      "name": "Desktop integration",
+      "description": "Desktop window discovery, focus, notifications and terminal integration adapters.",
+      "source": "plugins/desktop/native.rs",
+      "default": true,
+      "commands": [
+        {
+          "name": "status",
+          "description": "Desktop integration capabilities",
+          "args": []
+        }
+      ],
+      "tui_commands": [
+        "window"
+      ]
+    },
+    "agent-messaging": {
+      "kind": "builtin",
+      "name": "Agent communication",
+      "description": "Native cross-provider peer messages without terminal input or owner-composer edits.",
+      "default": true,
+      "source": "plugins/providers/peers.rs",
+      "commands": [
+        {
+          "name": "send",
+          "description": "Submit a peer message to a verified live native inbox",
+          "args": [
+            "id",
+            "conversation",
+            "sender",
+            "text",
+            "message_id"
+          ]
+        }
+      ]
+    },
+    "provider-claude": {
+      "kind": "builtin",
+      "name": "claude provider",
+      "description": "Bundled claude agent adapter with existing launch, status, transcript and model behavior.",
+      "default": true,
+      "source": "plugins/providers/claude.rs",
+      "commands": [
+        {
+          "name": "target",
+          "description": "Captured-target native operations.",
+          "args": [
+            "id",
+            "expected",
+            "operation",
+            "data",
+            "text",
+            "attachments",
+            "placement"
+          ]
+        }
+      ]
+    },
+    "provider-codex": {
+      "kind": "builtin",
+      "name": "codex provider",
+      "description": "Bundled codex agent adapter with existing launch, status, transcript and model behavior.",
+      "default": true,
+      "source": "plugins/providers/codex.rs",
+      "commands": [
+        {
+          "name": "control",
+          "description": "Thread-bound native Codex controls; unsupported runtimes retain guarded terminal controls.",
+          "args": [
+            "id",
+            "expected",
+            "conversation",
+            "action",
+            "model",
+            "effort",
+            "question",
+            "answer"
+          ]
+        },
+        {
+          "name": "target",
+          "description": "Captured-target native operations.",
+          "args": [
+            "id",
+            "expected",
+            "operation",
+            "data",
+            "text",
+            "attachments",
+            "placement"
+          ]
+        }
+      ]
+    },
+    "provider-agy": {
+      "kind": "builtin",
+      "name": "agy provider",
+      "description": "Bundled agy agent adapter with existing launch, status, transcript and model behavior.",
+      "default": true,
+      "source": "plugins/providers/antigravity.rs",
+      "commands": [
+        {
+          "name": "target",
+          "description": "Captured-target native operations.",
+          "args": [
+            "id",
+            "expected",
+            "operation",
+            "data",
+            "text",
+            "attachments",
+            "placement"
+          ]
+        }
+      ]
+    },
+    "provider-grok": {
+      "kind": "builtin",
+      "name": "grok provider",
+      "description": "Bundled grok agent adapter with existing launch, status, transcript and model behavior.",
+      "default": true,
+      "source": "plugins/providers/other.rs",
+      "commands": [
+        {
+          "name": "target",
+          "description": "Captured-target native operations.",
+          "args": [
+            "id",
+            "expected",
+            "operation",
+            "data",
+            "text",
+            "attachments",
+            "placement"
+          ]
+        }
+      ]
+    },
+    "provider-opencode": {
+      "kind": "builtin",
+      "name": "opencode provider",
+      "description": "Bundled opencode agent adapter with existing launch, status, transcript and model behavior.",
+      "default": true,
+      "source": "plugins/providers/other.rs",
+      "commands": [
+        {
+          "name": "target",
+          "description": "Captured-target native operations.",
+          "args": [
+            "id",
+            "expected",
+            "operation",
+            "data",
+            "text",
+            "attachments",
+            "placement"
+          ]
+        }
+      ]
+    },
+    "agent-limit": {
+      "kind": "optional",
+      "description": "One Codex-config-backed concurrency limit for Codex, Claude and repository dispatchers.",
+      "requires": [
+        "agent-settings"
+      ],
+      "files": [
+        {
+          "source": "plugins/agent-limit.lua",
+          "target": "plugins/agent-limit.lua"
+        }
+      ]
+    },
+    "agent-plugins": {
+      "kind": "optional",
+      "description": "List Claude and Codex plugins and turn one on or off in that agent's own settings.",
+      "requires": [
+        "agent-settings"
+      ],
+      "files": [
+        {
+          "source": "plugins/agent-plugins.lua",
+          "target": "plugins/agent-plugins.lua"
+        }
+      ]
+    },
+    "agent-settings": {
+      "kind": "helper",
+      "name": "Agent settings",
+      "description": "Shared Lua that edits Claude's settings.json and Codex's config.toml in place for agent-limit and agent-plugins.",
+      "default": true,
+      "files": [
+        {
+          "source": "lua/agent_settings/files.lua",
+          "target": "lua/agent_settings/files.lua"
+        },
+        {
+          "source": "lua/agent_settings/json.lua",
+          "target": "lua/agent_settings/json.lua"
+        },
+        {
+          "source": "lua/agent_settings/toml.lua",
+          "target": "lua/agent_settings/toml.lua"
+        }
+      ]
+    },
+    "unmerged-branches": {
+      "kind": "builtin",
+      "name": "Unmerged branches",
+      "description": "The number beside the repository title: branches with unmerged work checked out on any host, each counted once; merged and detached worktrees do not count.",
+      "source": "lua/unmerged_branches.lua",
+      "default": true
+    },
+    "dot": {
+      "kind": "optional",
+      "description": "Connect an existing cloud Dot through the bundled Rust native bridge.",
+      "source": "src/dot.rs",
+      "files": [
+        {
+          "source": "plugins/dot.lua",
+          "target": "plugins/dot.lua"
+        }
+      ]
+    },
+    "provider-accounts": {
+      "kind": "builtin",
+      "name": "Provider accounts",
+      "description": "Optional isolated Claude and Codex account profiles; rotation is opt-in.",
+      "source": "plugins/providers/accounts.rs",
+      "default": true
+    },
+    "launch-settings": {
+      "kind": "builtin",
+      "name": "Launch settings",
+      "description": "The model and reasoning effort new agent sessions start with: one : command per model and per effort.",
+      "source": "plugins/launch-settings/settings.rs",
+      "default": true,
+      "commands": [
+        {
+          "name": "status",
+          "description": "What each program starts with, and the choices",
+          "args": []
+        },
+        {
+          "name": "set",
+          "description": "Save a program's launch model or effort from a model or effort command",
+          "args": [
+            "words"
+          ]
+        },
+        {
+          "name": "reset",
+          "description": "Forget saved launch choices",
+          "args": [
+            "words"
+          ]
+        }
+      ],
+      "tui_commands": [
+        "launch"
+      ]
+    },
+    "task-sources": {
+      "kind": "helper",
+      "name": "Task sources",
+      "description": "Opt-in read-only Markdown checklist and GitHub Issues task sources; requires private source configuration.",
+      "default": true,
+      "files": [
+        {
+          "source": "lua/task_sources/service.lua",
+          "target": "service/task-sources.lua"
+        }
+      ],
+      "commands": [
+        {
+          "name": "status",
+          "description": "Configured task-source provider availability",
+          "args": []
+        }
+      ]
+    },
+    "prompt-avoidance": {
+      "kind": "builtin",
+      "source": "plugins/providers/prompt_avoidance.rs",
+      "name": "Prompt avoidance",
+      "description": "Optional bounded Claude Bash shell-shape advice; never answers permission prompts.",
+      "default": false
+    },
+    "native-permission-hook": {
+      "kind": "builtin",
+      "source": "plugins/providers/permission_hook.rs",
+      "name": "Native Read permission hook",
+      "description": "Bundled Claude Read responder with at most one eligible or uncertain claimed attempt per user turn; supervisor off and ineligible requests stay manual without claiming the turn.",
+      "default": true
+    }
+  }
+}

@@ -1,0 +1,13 @@
+/target/
+/private/
+.env
+.env.*
+*.keystore
+*.jks
+*.pem
+!android/app/src/test/resources/pin/*.pem
+*.key
+*.log
+__pycache__/
+*.py[cod]
+.DS_Store

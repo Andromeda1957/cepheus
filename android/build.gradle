@@ -1,0 +1,51 @@
+// Plugin artifacts belong in the same locked inventory as application dependencies.
+buildscript {
+    configurations.classpath {
+        resolutionStrategy.activateDependencyLocking()
+    }
+}
+
+plugins {
+    alias(libs.plugins.android.application) apply false
+    // AGP 9 compiles Kotlin itself; the Compose compiler plugin also sets the
+    // Kotlin version it uses (README.md, "Versions").
+    alias(libs.plugins.kotlin.compose) apply false
+}
+
+// Refresh all lockfiles with: ./gradlew resolveDependencyInventory --write-locks
+// Verify them without compiling or packaging: ./gradlew resolveDependencyInventory
+// STRICT also rejects a newly introduced configuration without recorded state.
+allprojects {
+    dependencyLocking {
+        lockAllConfigurations()
+        lockMode = LockMode.STRICT
+    }
+    buildscript.configurations.classpath {
+        resolutionStrategy.activateDependencyLocking()
+    }
+    tasks.register('resolveDependencyInventory') {
+        group = 'verification'
+        description = 'Resolves every dependency graph without compiling or packaging.'
+        notCompatibleWithConfigurationCache('Enumerates the project configurations during verification')
+        doLast {
+            def graphs = configurations.findAll { it.canBeResolved } +
+                    buildscript.configurations.findAll { it.canBeResolved }
+            graphs.each { configuration ->
+                def failures = configuration.incoming.resolutionResult.allDependencies.findAll {
+                    it instanceof org.gradle.api.artifacts.result.UnresolvedDependencyResult
+                }
+                if (!failures.empty) {
+                    throw new GradleException("Cannot resolve ${project.path}:${configuration.name}: " +
+                            failures.collect { it.attempted.displayName }.join(', '), failures.first().failure)
+                }
+            }
+        }
+    }
+    tasks.matching { it.name == 'check' }.configureEach {
+        dependsOn tasks.named('resolveDependencyInventory')
+    }
+}
+
+tasks.named('resolveDependencyInventory') {
+    dependsOn subprojects.collect { it.tasks.named('resolveDependencyInventory') }
+}

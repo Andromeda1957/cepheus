@@ -1,0 +1,16 @@
+{
+  "sidebar_width": 34,
+  "notifications": true,
+  "claude_command": ["claude"],
+  "codex_command": ["codex"],
+  "antigravity_command": ["agy"],
+  "grok_command": ["grok"],
+  "opencode_command": ["opencode"],
+  "dev_server_command": [],
+  "remote": false,
+  "sync_logins": false,
+  "short_titles": false,
+  "plugins": {
+    "git-mirror": false
+  }
+}

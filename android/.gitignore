@@ -1,0 +1,11 @@
+# Gradle and IDE output; the APK is built, never committed.
+build/
+.gradle/
+.kotlin/
+.idea/
+local.properties
+*.apk
+*.aab
+# Signing material lives outside the repository (README.md, "Signing").
+*.keystore
+*.jks

@@ -1,0 +1,237 @@
+{
+  "columns": 144,
+  "data": "synthetic; no owner sessions or credentials",
+  "renderer": "production ratatui view::render",
+  "rows": 44,
+  "schema": 1,
+  "screens": [
+    {
+      "id": "01-workspace",
+      "image": "01-workspace.png",
+      "svg": "01-workspace.svg",
+      "title": "Workspace and hosted agent"
+    },
+    {
+      "id": "02-insert",
+      "image": "02-insert.png",
+      "svg": "02-insert.svg",
+      "title": "Typing in a hosted session"
+    },
+    {
+      "id": "03-command",
+      "image": "03-command.png",
+      "svg": "03-command.svg",
+      "title": "Command line"
+    },
+    {
+      "id": "04-empty-pane",
+      "image": "04-empty-pane.png",
+      "svg": "04-empty-pane.svg",
+      "title": "Session selection"
+    },
+    {
+      "id": "05-new-session",
+      "image": "05-new-session.png",
+      "svg": "05-new-session.svg",
+      "title": "New session"
+    },
+    {
+      "id": "06-help",
+      "image": "06-help.png",
+      "svg": "06-help.svg",
+      "title": "Help and key bindings"
+    },
+    {
+      "id": "07-errors",
+      "image": "07-errors.png",
+      "svg": "07-errors.svg",
+      "title": "Errors"
+    },
+    {
+      "id": "08-machines",
+      "image": "08-machines.png",
+      "svg": "08-machines.svg",
+      "title": "Machine resources"
+    },
+    {
+      "id": "09-usage",
+      "image": "09-usage.png",
+      "svg": "09-usage.svg",
+      "title": "Provider usage"
+    },
+    {
+      "id": "10-branches",
+      "image": "10-branches.png",
+      "svg": "10-branches.svg",
+      "title": "Branches and worktrees"
+    },
+    {
+      "id": "11-scans",
+      "image": "11-scans.png",
+      "svg": "11-scans.svg",
+      "title": "Security scans"
+    },
+    {
+      "id": "12-broadcast",
+      "image": "12-broadcast.png",
+      "svg": "12-broadcast.svg",
+      "title": "Broadcast"
+    },
+    {
+      "id": "13-confirm",
+      "image": "13-confirm.png",
+      "svg": "13-confirm.svg",
+      "title": "Service confirmation"
+    },
+    {
+      "id": "14-resume",
+      "image": "14-resume.png",
+      "svg": "14-resume.svg",
+      "title": "Resume a saved conversation"
+    },
+    {
+      "id": "15-queue",
+      "image": "15-queue.png",
+      "svg": "15-queue.svg",
+      "title": "Work queue"
+    },
+    {
+      "id": "16-task-sources",
+      "image": "16-task-sources.png",
+      "svg": "16-task-sources.svg",
+      "title": "Task sources"
+    },
+    {
+      "id": "17-chores",
+      "image": "17-chores.png",
+      "svg": "17-chores.svg",
+      "title": "Scheduled chores"
+    },
+    {
+      "id": "18-attention",
+      "image": "18-attention.png",
+      "svg": "18-attention.svg",
+      "title": "Idle deliveries"
+    },
+    {
+      "id": "19-supervisor",
+      "image": "19-supervisor.png",
+      "svg": "19-supervisor.svg",
+      "title": "Supervisor"
+    },
+    {
+      "id": "20-hosts",
+      "image": "20-hosts.png",
+      "svg": "20-hosts.svg",
+      "title": "Hosts report"
+    },
+    {
+      "id": "21-install-preview",
+      "image": "21-install-preview.png",
+      "svg": "21-install-preview.svg",
+      "title": "Extension installation preview"
+    },
+    {
+      "id": "22-ask",
+      "image": "22-ask.png",
+      "svg": "22-ask.svg",
+      "title": "Quick questions and answers"
+    },
+    {
+      "id": "23-idle-message",
+      "image": "23-idle-message.png",
+      "svg": "23-idle-message.svg",
+      "title": "Idle message draft"
+    },
+    {
+      "id": "24-pairing",
+      "image": "24-pairing.png",
+      "svg": "24-pairing.svg",
+      "title": "Pair an Android device (inert example)"
+    },
+    {
+      "id": "25-plugin-picker",
+      "image": "25-plugin-picker.png",
+      "svg": "25-plugin-picker.svg",
+      "title": "Lua plugin picker"
+    },
+    {
+      "id": "26-job-chat",
+      "image": "26-job-chat.png",
+      "svg": "26-job-chat.svg",
+      "title": "Headless job output"
+    },
+    {
+      "id": "27-job-raw",
+      "image": "27-job-raw.png",
+      "svg": "27-job-raw.svg",
+      "title": "Headless job raw log"
+    },
+    {
+      "id": "28-terminal",
+      "image": "28-terminal.png",
+      "svg": "28-terminal.svg",
+      "title": "Hosted shell"
+    },
+    {
+      "id": "29-private-response",
+      "image": "29-private-response.png",
+      "svg": "29-private-response.svg",
+      "title": "Explicitly opened delivery response"
+    },
+    {
+      "id": "30-help-sessions",
+      "image": "30-help-sessions.png",
+      "svg": "30-help-sessions.svg",
+      "title": "Help: sessions and hotkeys"
+    },
+    {
+      "id": "31-help-windows",
+      "image": "31-help-windows.png",
+      "svg": "31-help-windows.svg",
+      "title": "Help: windows and jobs"
+    },
+    {
+      "id": "32-help-commands",
+      "image": "32-help-commands.png",
+      "svg": "32-help-commands.svg",
+      "title": "Help: attention and commands"
+    },
+    {
+      "id": "33-fleet-slots",
+      "image": "33-fleet-slots.png",
+      "svg": "33-fleet-slots.svg",
+      "title": "Fleet scheduler slots"
+    },
+    {
+      "id": "34-command-catalog",
+      "image": "34-command-catalog.png",
+      "svg": "34-command-catalog.svg",
+      "title": "Command catalog"
+    },
+    {
+      "id": "35-options",
+      "image": "35-options.png",
+      "svg": "35-options.svg",
+      "title": "Lua options"
+    },
+    {
+      "id": "36-skills",
+      "image": "36-skills.png",
+      "svg": "36-skills.svg",
+      "title": "Skills report"
+    },
+    {
+      "id": "37-search",
+      "image": "37-search.png",
+      "svg": "37-search.svg",
+      "title": "Filter a window"
+    },
+    {
+      "id": "38-cloud-chat",
+      "image": "38-cloud-chat.png",
+      "svg": "38-cloud-chat.svg",
+      "title": "Native cloud conversation"
+    }
+  ]
+}

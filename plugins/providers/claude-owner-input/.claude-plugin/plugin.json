@@ -1,0 +1,5 @@
+{
+  "name": "cepheus-owner-input",
+  "version": "1.2.0",
+  "description": "Submits the owner's messages and files from Cepheus to this Claude session as the owner's own prompt, delivers the owner's broadcasts into the running turn, and ends a turn on the owner's Stop."
+}

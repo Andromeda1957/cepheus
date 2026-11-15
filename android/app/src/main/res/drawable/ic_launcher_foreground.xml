@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Two stacked cards with a prompt chevron: sessions in one deck. The art
+     stays inside the adaptive icon's 66dp safe zone (21..87). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#6662ABF6"
+        android:pathData="M38,30h36a6,6 0,0 1,6 6v4h-48v-4a6,6 0,0 1,6 -6z" />
+    <path
+        android:fillColor="#FF62ABF6"
+        android:pathData="M32,40h44a6,6 0,0 1,6 6v26a6,6 0,0 1,-6 6h-44a6,6 0,0 1,-6 -6v-26a6,6 0,0 1,6 -6z" />
+    <path
+        android:strokeColor="#FF121315"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M40,51l8,8l-8,8" />
+    <path
+        android:strokeColor="#FF121315"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M56,67h14" />
+</vector>

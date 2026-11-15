@@ -1,0 +1,312 @@
+{
+  "schema": 1,
+  "renderer": "Android APK via adb screencap",
+  "data": "isolated synthetic fixtures",
+  "screens": [
+    {
+      "id": "01-pairing",
+      "title": "Pair this phone",
+      "image": "01-pairing.png"
+    },
+    {
+      "id": "02-home-empty",
+      "title": "Home before starting sessions",
+      "image": "02-home-empty.png"
+    },
+    {
+      "id": "03-home",
+      "title": "Sessions home",
+      "image": "03-home.png"
+    },
+    {
+      "id": "04-drawer",
+      "title": "Session drawer",
+      "image": "04-drawer.png"
+    },
+    {
+      "id": "05-resume",
+      "title": "Resume a conversation",
+      "image": "05-resume.png"
+    },
+    {
+      "id": "06-new-session",
+      "title": "New session",
+      "image": "06-new-session.png"
+    },
+    {
+      "id": "07-new-session-options",
+      "title": "Session options",
+      "image": "07-new-session-options.png"
+    },
+    {
+      "id": "08-chat",
+      "title": "Agent conversation",
+      "image": "08-chat.png"
+    },
+    {
+      "id": "09-session-menu",
+      "title": "Session actions",
+      "image": "09-session-menu.png"
+    },
+    {
+      "id": "10-rename",
+      "title": "Rename session",
+      "image": "10-rename.png"
+    },
+    {
+      "id": "11-settings",
+      "title": "Settings",
+      "image": "11-settings.png"
+    },
+    {
+      "id": "12-stats",
+      "title": "Usage and machine statistics",
+      "image": "12-stats.png"
+    },
+    {
+      "id": "13-errors",
+      "title": "Service errors",
+      "image": "13-errors.png"
+    },
+    {
+      "id": "14-connections",
+      "title": "Saved connections",
+      "image": "14-connections.png"
+    },
+    {
+      "id": "15-theme",
+      "title": "Theme selection",
+      "image": "15-theme.png"
+    },
+    {
+      "id": "16-home-dark",
+      "title": "Sessions home in dark theme",
+      "image": "16-home-dark.png"
+    },
+    {
+      "id": "17-tools",
+      "title": "Deck tools",
+      "image": "17-tools.png"
+    },
+    {
+      "id": "18-queue",
+      "title": "Queue",
+      "image": "18-queue.png"
+    },
+    {
+      "id": "19-jobs",
+      "title": "Jobs",
+      "image": "19-jobs.png"
+    },
+    {
+      "id": "20-scheduler",
+      "title": "Scheduler",
+      "image": "20-scheduler.png"
+    },
+    {
+      "id": "21-branches",
+      "title": "Branches",
+      "image": "21-branches.png"
+    },
+    {
+      "id": "22-ask",
+      "title": "Ask",
+      "image": "22-ask.png"
+    },
+    {
+      "id": "23-broadcast",
+      "title": "Broadcast",
+      "image": "23-broadcast.png"
+    },
+    {
+      "id": "24-terminals",
+      "title": "Terminals",
+      "image": "24-terminals.png"
+    },
+    {
+      "id": "25-scans",
+      "title": "Scans",
+      "image": "25-scans.png"
+    },
+    {
+      "id": "26-extensions",
+      "title": "Extensions",
+      "image": "26-extensions.png"
+    },
+    {
+      "id": "27-scripting",
+      "title": "Scripting",
+      "image": "27-scripting.png"
+    },
+    {
+      "id": "28-service",
+      "title": "Service",
+      "image": "28-service.png"
+    },
+    {
+      "id": "29-queue-detail",
+      "title": "Queued work details",
+      "image": "29-queue-detail.png"
+    },
+    {
+      "id": "30-task-sources",
+      "title": "Task sources",
+      "image": "30-task-sources.png"
+    },
+    {
+      "id": "31-chores",
+      "title": "Scheduled chores",
+      "image": "31-chores.png"
+    },
+    {
+      "id": "32-chore-form",
+      "title": "Register scheduled work",
+      "image": "32-chore-form.png"
+    },
+    {
+      "id": "33-queue-form",
+      "title": "Add queued work",
+      "image": "33-queue-form.png"
+    },
+    {
+      "id": "34-batch-form",
+      "title": "Batch queued work",
+      "image": "34-batch-form.png"
+    },
+    {
+      "id": "35-job-output",
+      "title": "Headless job output",
+      "image": "35-job-output.png"
+    },
+    {
+      "id": "36-job-raw",
+      "title": "Headless job raw log",
+      "image": "36-job-raw.png"
+    },
+    {
+      "id": "37-job-form",
+      "title": "New headless job",
+      "image": "37-job-form.png"
+    },
+    {
+      "id": "38-terminal-options",
+      "title": "Terminal options",
+      "image": "38-terminal-options.png"
+    },
+    {
+      "id": "39-terminal",
+      "title": "Hosted terminal",
+      "image": "39-terminal.png"
+    },
+    {
+      "id": "40-scan-report",
+      "title": "Saved security report",
+      "image": "40-scan-report.png"
+    },
+    {
+      "id": "41-extension-preview",
+      "title": "Extension installation preview",
+      "image": "41-extension-preview.png"
+    },
+    {
+      "id": "42-plugin-picker",
+      "title": "Lua plugin picker",
+      "image": "42-plugin-picker.png"
+    },
+    {
+      "id": "43-scripting-options",
+      "title": "Lua scripting options",
+      "image": "43-scripting-options.png"
+    },
+    {
+      "id": "44-service-confirmation",
+      "title": "Service action confirmation",
+      "image": "44-service-confirmation.png"
+    },
+    {
+      "id": "45-attachments",
+      "title": "Attachments menu",
+      "image": "45-attachments.png"
+    },
+    {
+      "id": "46-commands",
+      "title": "Skills and commands",
+      "image": "46-commands.png"
+    },
+    {
+      "id": "47-model",
+      "title": "Model and effort selection",
+      "image": "47-model.png"
+    },
+    {
+      "id": "48-idle-delivery",
+      "title": "Send when idle composer",
+      "image": "48-idle-delivery.png"
+    },
+    {
+      "id": "49-close-confirmation",
+      "title": "Close session confirmation",
+      "image": "49-close-confirmation.png"
+    },
+    {
+      "id": "50-subagents",
+      "title": "Sub-agent details",
+      "image": "50-subagents.png"
+    },
+    {
+      "id": "51-question",
+      "title": "Agent question",
+      "image": "51-question.png"
+    },
+    {
+      "id": "52-question-collapsed",
+      "title": "Message while a question waits",
+      "image": "52-question-collapsed.png"
+    },
+    {
+      "id": "53-session-search",
+      "title": "Search sessions",
+      "image": "53-session-search.png"
+    },
+    {
+      "id": "overlay-battery-explanation",
+      "title": "Background connection battery explanation",
+      "image": "overlay-battery-explanation.png"
+    },
+    {
+      "id": "overlay-chat-image",
+      "title": "Conversation with an image attachment",
+      "image": "overlay-chat-image.png"
+    },
+    {
+      "id": "overlay-discard-draft",
+      "title": "Discard queued-work draft confirmation",
+      "image": "overlay-discard-draft.png"
+    },
+    {
+      "id": "overlay-edit-schedule",
+      "title": "Edit future chore schedule",
+      "image": "overlay-edit-schedule.png"
+    },
+    {
+      "id": "overlay-image-viewer",
+      "title": "Full-screen image viewer",
+      "image": "overlay-image-viewer.png"
+    },
+    {
+      "id": "overlay-queue-confirmation",
+      "title": "Queue action confirmation",
+      "image": "overlay-queue-confirmation.png"
+    },
+    {
+      "id": "overlay-reply-actions",
+      "title": "Reply actions menu",
+      "image": "overlay-reply-actions.png"
+    },
+    {
+      "id": "overlay-select-text",
+      "title": "Select reply text",
+      "image": "overlay-select-text.png"
+    }
+  ]
+}
