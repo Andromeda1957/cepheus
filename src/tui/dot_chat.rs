@@ -307,17 +307,17 @@ impl App {
         self.apply_dot_feed(path, stamp, feed);
     }
 
-    /// A failed read keeps the last good conversation on screen; the same
-    /// file is not read again until it changes.
+    /// A failed read keeps the last good conversation on screen and retries
+    /// at the next poll. Only successfully read file versions are cached.
     fn apply_dot_feed(
         &mut self,
         path: PathBuf,
         stamp: Option<(SystemTime, u64)>,
         feed: Option<(Vec<Item>, Vec<String>)>,
     ) {
+        let Some((items, ids)) = feed else { return };
         self.dot.path = Some(path);
         self.dot.stamp = stamp;
-        let Some((items, ids)) = feed else { return };
         self.dot.ids = ids;
         let waiting = self.dot.submitted.len();
         self.dot.submitted.retain(|sent| !self.dot.ids.contains(&sent.id));

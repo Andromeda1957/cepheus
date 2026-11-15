@@ -14,6 +14,59 @@ fn transient_snapshot_failure_keeps_the_visible_conversation_and_draft() {
         assert!(matches!(&app.dot.items[..], [Item::User {text,..}] if text == "Keep this message"));
         assert_eq!(app.dot.draft, "unsent draft");
     }
+
+    // An idle recovered bridge need not rewrite its feed again. A failed
+    // read must therefore leave the same file version eligible for retry.
+    let healthy = r#"[{"k":"assistant","id":"recovered","text":"Dot is reachable again"}]"#;
+    let mut missed = Vec::new();
+    for cause in ["malformed JSON", "invalid message", "symlink"] {
+        let (mut app, _) = ready();
+        app.dot.items = vec![Item::Notice { text: "Cannot connect to Dot; retrying. Nothing is resent.".into() }];
+        app.dot.draft = "keep this draft".into();
+        let image = Image::new("draft.png", b"\x89PNG\r\n\x1a\nfixture").unwrap();
+        app.dot.images = vec![image.clone()];
+        let warning = "Delivery unconfirmed. Check ChatGPT; nothing is resent.";
+        app.dot.problem = Some(warning.into());
+        app.dot.submitted = vec![Submitted { id: "accepted".into(), text: "accepted message".into(), images: vec![] }];
+        let path = dir.path().join(format!("{cause}.json"));
+        let source = dir.path().join("healthy.json");
+        if cause == "symlink" {
+            std::fs::write(&source, healthy).unwrap();
+            std::os::unix::fs::symlink(&source, &path).unwrap();
+        } else {
+            let invalid = if cause == "malformed JSON" { "{" } else { r#"[{"k":"unsupported"}]"# };
+            std::fs::write(&path, format!("{invalid:width$}", width = healthy.len())).unwrap();
+        }
+        let stamp = snapshot_stamp(&path).unwrap();
+        app.read_dot_snapshot(path.clone());
+        assert!(app.dot_failure().is_some(), "a rejected {cause} feed must keep the last good view");
+        if cause == "symlink" {
+            std::fs::remove_file(&path).unwrap();
+            std::fs::rename(&source, &path).unwrap();
+        } else {
+            std::fs::write(&path, healthy).unwrap();
+            std::fs::File::options()
+                .write(true)
+                .open(&path)
+                .unwrap()
+                .set_times(std::fs::FileTimes::new().set_modified(stamp.0))
+                .unwrap();
+        }
+        assert_eq!(snapshot_stamp(&path), Some(stamp), "recovery must not rely on a newer file stamp");
+        app.read_dot_snapshot(path);
+        if app.dot_failure().is_some() {
+            missed.push(cause);
+        }
+        assert_eq!(app.dot.draft, "keep this draft");
+        assert_eq!(app.dot.images.len(), 1);
+        assert_eq!(app.dot.images[0].name, image.name);
+        assert_eq!(app.dot.images[0].data, image.data);
+        assert_eq!(app.dot.problem.as_deref(), Some(warning));
+        assert_eq!(app.dot.submitted.len(), 1, "a feed read is not an accepted message's receipt");
+        assert_eq!(app.dot.submitted[0].id, "accepted");
+        assert!(app.dot.sending.is_none());
+    }
+    assert!(missed.is_empty(), "recovered feeds were never retried after: {missed:?}");
 }
 
 fn ready() -> (App, Receiver<ClientMsg>) {
