@@ -15,6 +15,15 @@ class SettingsStoreTest {
     }
 
     @Test
+    fun absentOrUnknownThemeIsDark() {
+        val memory = Memory()
+        assertEquals(ThemeChoice.DARK, AppSettings().theme)
+        assertEquals(ThemeChoice.DARK, SettingsStore(memory).load().theme)
+        memory.strings["theme"] = "unknown-theme"
+        assertEquals(ThemeChoice.DARK, SettingsStore(memory).load().theme)
+    }
+
+    @Test
     fun choicesAreKept() {
         val memory = Memory()
         val chosen = AppSettings(
@@ -26,7 +35,10 @@ class SettingsStoreTest {
         )
         SettingsStore(memory).save(chosen)
         assertEquals(chosen, SettingsStore(memory).load())
-        SettingsStore(memory).save(chosen.copy(background = false, theme = ThemeChoice.LIGHT))
-        assertEquals(chosen.copy(background = false, theme = ThemeChoice.LIGHT), SettingsStore(memory).load())
+        for (theme in ThemeChoice.entries) {
+            val explicit = chosen.copy(background = false, theme = theme)
+            SettingsStore(memory).save(explicit)
+            assertEquals(explicit, SettingsStore(memory).load())
+        }
     }
 }

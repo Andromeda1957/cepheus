@@ -1,8 +1,10 @@
 # Desktop screenshots
 
-Captured from Cepheus's production terminal renderer with synthetic project data. No owner sessions, accounts or credentials appear. The pairing code is inert.
+Captured as native Foot terminal pixels from Cepheus's production ratatui renderer, using synthetic project data. No owner sessions, accounts or credentials appear. The pairing code is inert.
 
-Regenerate with `python3 tools/capture_screenshots.py`. A fixed 144 × 44 terminal and neutral dark palette keep the gallery reproducible.
+The terminal uses JetBrainsMono Nerd Font at 12 pt and a near-black palette. The README workspace image uses a compact 120 × 34 viewport for readability; the full gallery uses 160 × 44. Bold text, dim text, ANSI colors, Nerd Font glyphs and terminal cell widths are drawn by Foot.
+
+Regenerate with `python3 tools/capture_screenshots.py`, or replay offloaded buffers with `python3 tools/capture_screenshots.py --render-only CAPTURE_DIRECTORY`. Capture uses an empty, inactive Hyprland workspace (10 by default) and requires Foot, grim with toplevel capture, and JetBrainsMono Nerd Font.
 
 ## Workspace and hosted agent
 

@@ -51,16 +51,21 @@ disposable-emulator requirements.
 The [gallery](docs/screenshots/README.md) documents each distinct desktop and
 Android screen with neutral fixture content.
 
-Desktop captures call the production ratatui renderer through an ignored
-documentation capture entrypoint. They do not connect to a running service or
-read real conversations. Install `rsvg-convert` (librsvg) and a monospace font:
+Desktop captures export the production ratatui renderer's ANSI output through
+an ignored documentation entrypoint. Foot draws the terminal, and grim captures
+its native pixels. They do not connect to a running service or read real
+conversations. Install Foot, grim with toplevel capture support, and JetBrainsMono
+Nerd Font on a Hyprland Wayland session:
 
 ```sh
 python3 tools/capture_screenshots.py
 ```
 
-To keep compilation on a separate build machine, run the capture entrypoint
-there, copy the output directory, then render it locally:
+Use an empty, inactive capture workspace (10 by default). The capture command
+keeps that workspace hidden and closes its own terminal windows afterward.
+
+To keep compilation on a separate build machine, export the ANSI buffers
+there, copy the output directory, then capture them locally:
 
 ```sh
 CEPHEUS_SCREENSHOTS_DIR=/path/to/captures cargo test --release --locked --bin cepheus view::screenshots::capture_all_screens -- --ignored --exact --nocapture

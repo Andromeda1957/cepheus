@@ -1,237 +1,523 @@
 {
-  "columns": 144,
+  "columns": 160,
   "data": "synthetic; no owner sessions or credentials",
-  "renderer": "production ratatui view::render",
+  "renderer": "production ratatui CrosstermBackend replayed in Foot; grim toplevel screencopy",
   "rows": 44,
   "schema": 1,
   "screens": [
     {
+      "ansi": "01-workspace.ansi",
+      "columns": 120,
       "id": "01-workspace",
       "image": "01-workspace.png",
-      "svg": "01-workspace.svg",
-      "title": "Workspace and hosted agent"
+      "rows": 34,
+      "sidebar_columns": 30,
+      "title": "Workspace and hosted agent",
+      "pixel_width": 2970,
+      "pixel_height": 1883
     },
     {
+      "ansi": "02-insert.ansi",
+      "columns": 160,
       "id": "02-insert",
       "image": "02-insert.png",
-      "svg": "02-insert.svg",
-      "title": "Typing in a hosted session"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Typing in a hosted session",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "03-command.ansi",
+      "columns": 160,
       "id": "03-command",
       "image": "03-command.png",
-      "svg": "03-command.svg",
-      "title": "Command line"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Command line",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "04-empty-pane.ansi",
+      "columns": 160,
       "id": "04-empty-pane",
       "image": "04-empty-pane.png",
-      "svg": "04-empty-pane.svg",
-      "title": "Session selection"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Session selection",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "05-new-session.ansi",
+      "columns": 160,
       "id": "05-new-session",
       "image": "05-new-session.png",
-      "svg": "05-new-session.svg",
-      "title": "New session"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "New session",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "06-help.ansi",
+      "columns": 160,
       "id": "06-help",
       "image": "06-help.png",
-      "svg": "06-help.svg",
-      "title": "Help and key bindings"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Help and key bindings",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "07-errors.ansi",
+      "columns": 160,
       "id": "07-errors",
       "image": "07-errors.png",
-      "svg": "07-errors.svg",
-      "title": "Errors"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Errors",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "08-machines.ansi",
+      "columns": 160,
       "id": "08-machines",
       "image": "08-machines.png",
-      "svg": "08-machines.svg",
-      "title": "Machine resources"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Machine resources",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "09-usage.ansi",
+      "columns": 160,
       "id": "09-usage",
       "image": "09-usage.png",
-      "svg": "09-usage.svg",
-      "title": "Provider usage"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Provider usage",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "10-branches.ansi",
+      "columns": 160,
       "id": "10-branches",
       "image": "10-branches.png",
-      "svg": "10-branches.svg",
-      "title": "Branches and worktrees"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Branches and worktrees",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "11-scans.ansi",
+      "columns": 160,
       "id": "11-scans",
       "image": "11-scans.png",
-      "svg": "11-scans.svg",
-      "title": "Security scans"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Security scans",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "12-broadcast.ansi",
+      "columns": 160,
       "id": "12-broadcast",
       "image": "12-broadcast.png",
-      "svg": "12-broadcast.svg",
-      "title": "Broadcast"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Broadcast",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "13-confirm.ansi",
+      "columns": 160,
       "id": "13-confirm",
       "image": "13-confirm.png",
-      "svg": "13-confirm.svg",
-      "title": "Service confirmation"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Service confirmation",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "14-resume.ansi",
+      "columns": 160,
       "id": "14-resume",
       "image": "14-resume.png",
-      "svg": "14-resume.svg",
-      "title": "Resume a saved conversation"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Resume a saved conversation",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "15-queue.ansi",
+      "columns": 160,
       "id": "15-queue",
       "image": "15-queue.png",
-      "svg": "15-queue.svg",
-      "title": "Work queue"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Work queue",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "16-task-sources.ansi",
+      "columns": 160,
       "id": "16-task-sources",
       "image": "16-task-sources.png",
-      "svg": "16-task-sources.svg",
-      "title": "Task sources"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Task sources",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "17-chores.ansi",
+      "columns": 160,
       "id": "17-chores",
       "image": "17-chores.png",
-      "svg": "17-chores.svg",
-      "title": "Scheduled chores"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Scheduled chores",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "18-attention.ansi",
+      "columns": 160,
       "id": "18-attention",
       "image": "18-attention.png",
-      "svg": "18-attention.svg",
-      "title": "Idle deliveries"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Idle deliveries",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "19-supervisor.ansi",
+      "columns": 160,
       "id": "19-supervisor",
       "image": "19-supervisor.png",
-      "svg": "19-supervisor.svg",
-      "title": "Supervisor"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Supervisor",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "20-hosts.ansi",
+      "columns": 160,
       "id": "20-hosts",
       "image": "20-hosts.png",
-      "svg": "20-hosts.svg",
-      "title": "Hosts report"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Hosts report",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "21-install-preview.ansi",
+      "columns": 160,
       "id": "21-install-preview",
       "image": "21-install-preview.png",
-      "svg": "21-install-preview.svg",
-      "title": "Extension installation preview"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Extension installation preview",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "22-ask.ansi",
+      "columns": 160,
       "id": "22-ask",
       "image": "22-ask.png",
-      "svg": "22-ask.svg",
-      "title": "Quick questions and answers"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Quick questions and answers",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "23-idle-message.ansi",
+      "columns": 160,
       "id": "23-idle-message",
       "image": "23-idle-message.png",
-      "svg": "23-idle-message.svg",
-      "title": "Idle message draft"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Idle message draft",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "24-pairing.ansi",
+      "columns": 160,
       "id": "24-pairing",
       "image": "24-pairing.png",
-      "svg": "24-pairing.svg",
-      "title": "Pair an Android device (inert example)"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Pair an Android device (inert example)",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "25-plugin-picker.ansi",
+      "columns": 160,
       "id": "25-plugin-picker",
       "image": "25-plugin-picker.png",
-      "svg": "25-plugin-picker.svg",
-      "title": "Lua plugin picker"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Lua plugin picker",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "26-job-chat.ansi",
+      "columns": 160,
       "id": "26-job-chat",
       "image": "26-job-chat.png",
-      "svg": "26-job-chat.svg",
-      "title": "Headless job output"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Headless job output",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "27-job-raw.ansi",
+      "columns": 160,
       "id": "27-job-raw",
       "image": "27-job-raw.png",
-      "svg": "27-job-raw.svg",
-      "title": "Headless job raw log"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Headless job raw log",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "28-terminal.ansi",
+      "columns": 160,
       "id": "28-terminal",
       "image": "28-terminal.png",
-      "svg": "28-terminal.svg",
-      "title": "Hosted shell"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Hosted shell",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "29-private-response.ansi",
+      "columns": 160,
       "id": "29-private-response",
       "image": "29-private-response.png",
-      "svg": "29-private-response.svg",
-      "title": "Explicitly opened delivery response"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Explicitly opened delivery response",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "30-help-sessions.ansi",
+      "columns": 160,
       "id": "30-help-sessions",
       "image": "30-help-sessions.png",
-      "svg": "30-help-sessions.svg",
-      "title": "Help: sessions and hotkeys"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Help: sessions and hotkeys",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "31-help-windows.ansi",
+      "columns": 160,
       "id": "31-help-windows",
       "image": "31-help-windows.png",
-      "svg": "31-help-windows.svg",
-      "title": "Help: windows and jobs"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Help: windows and jobs",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "32-help-commands.ansi",
+      "columns": 160,
       "id": "32-help-commands",
       "image": "32-help-commands.png",
-      "svg": "32-help-commands.svg",
-      "title": "Help: attention and commands"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Help: attention and commands",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "33-fleet-slots.ansi",
+      "columns": 160,
       "id": "33-fleet-slots",
       "image": "33-fleet-slots.png",
-      "svg": "33-fleet-slots.svg",
-      "title": "Fleet scheduler slots"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Fleet scheduler slots",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "34-command-catalog.ansi",
+      "columns": 160,
       "id": "34-command-catalog",
       "image": "34-command-catalog.png",
-      "svg": "34-command-catalog.svg",
-      "title": "Command catalog"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Command catalog",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "35-options.ansi",
+      "columns": 160,
       "id": "35-options",
       "image": "35-options.png",
-      "svg": "35-options.svg",
-      "title": "Lua options"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Lua options",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "36-skills.ansi",
+      "columns": 160,
       "id": "36-skills",
       "image": "36-skills.png",
-      "svg": "36-skills.svg",
-      "title": "Skills report"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Skills report",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "37-search.ansi",
+      "columns": 160,
       "id": "37-search",
       "image": "37-search.png",
-      "svg": "37-search.svg",
-      "title": "Filter a window"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Filter a window",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     },
     {
+      "ansi": "38-cloud-chat.ansi",
+      "columns": 160,
       "id": "38-cloud-chat",
       "image": "38-cloud-chat.png",
-      "svg": "38-cloud-chat.svg",
-      "title": "Native cloud conversation"
+      "rows": 44,
+      "sidebar_columns": 40,
+      "title": "Native cloud conversation",
+      "pixel_width": 3940,
+      "pixel_height": 2420
     }
-  ]
+  ],
+  "terminal": {
+    "background": [
+      19,
+      20,
+      22
+    ],
+    "font": "JetBrainsMono Nerd Font",
+    "font_size_points": 12,
+    "foreground": [
+      185,
+      190,
+      196
+    ],
+    "palette": [
+      [
+        19,
+        20,
+        22
+      ],
+      [
+        223,
+        101,
+        101
+      ],
+      [
+        130,
+        173,
+        77
+      ],
+      [
+        179,
+        147,
+        98
+      ],
+      [
+        54,
+        146,
+        231
+      ],
+      [
+        177,
+        140,
+        240
+      ],
+      [
+        102,
+        180,
+        200
+      ],
+      [
+        185,
+        190,
+        196
+      ],
+      [
+        143,
+        149,
+        156
+      ],
+      [
+        239,
+        133,
+        133
+      ],
+      [
+        162,
+        197,
+        117
+      ],
+      [
+        210,
+        179,
+        133
+      ],
+      [
+        101,
+        177,
+        244
+      ],
+      [
+        200,
+        171,
+        245
+      ],
+      [
+        139,
+        205,
+        221
+      ],
+      [
+        223,
+        227,
+        232
+      ]
+    ]
+  }
 }

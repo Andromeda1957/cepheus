@@ -4,29 +4,41 @@ use super::*;
 use crate::protocol::{BranchInfo, Conversation, HostInfo, HostStats, ScanInfo, Status, Tool, UsageWindow};
 use crate::screen::{Run, ScreenFrame};
 use crate::tui::tests::{app_with, session};
-use ratatui::{backend::TestBackend, Terminal};
+use alacritty_terminal::{
+    event::VoidListener,
+    term::{test::TermSize, Config as TermConfig, Term},
+    vte::ansi::{Processor, StdSyncHandler},
+};
+use ratatui::{
+    backend::{Backend, CrosstermBackend, TestBackend},
+    buffer::Buffer,
+    Terminal,
+};
 use serde_json::{json, Value};
-use std::{fmt::Write as _, fs, path::Path};
+use std::{fs, path::Path};
 
-const WIDTH: u16 = 144;
+const WIDTH: u16 = 160;
 const HEIGHT: u16 = 44;
+const FOREGROUND: (u8, u8, u8) = (0xb9, 0xbe, 0xc4);
+const BACKGROUND: (u8, u8, u8) = (0x13, 0x14, 0x16);
+// The neutral dark palette used by the native Foot capture, not an SVG theme.
 const BASE: [(u8, u8, u8); 16] = [
-    (26, 27, 38),
-    (247, 118, 142),
-    (158, 206, 106),
-    (224, 175, 104),
-    (122, 162, 247),
-    (187, 154, 247),
-    (125, 207, 255),
-    (169, 177, 214),
-    (86, 95, 137),
-    (247, 118, 142),
-    (158, 206, 106),
-    (224, 175, 104),
-    (122, 162, 247),
-    (187, 154, 247),
-    (125, 207, 255),
-    (192, 202, 245),
+    (0x13, 0x14, 0x16),
+    (0xdf, 0x65, 0x65),
+    (0x82, 0xad, 0x4d),
+    (0xb3, 0x93, 0x62),
+    (0x36, 0x92, 0xe7),
+    (0xb1, 0x8c, 0xf0),
+    (0x66, 0xb4, 0xc8),
+    (0xb9, 0xbe, 0xc4),
+    (0x8f, 0x95, 0x9c),
+    (0xef, 0x85, 0x85),
+    (0xa2, 0xc5, 0x75),
+    (0xd2, 0xb3, 0x85),
+    (0x65, 0xb1, 0xf4),
+    (0xc8, 0xab, 0xf5),
+    (0x8b, 0xcd, 0xdd),
+    (0xdf, 0xe3, 0xe8),
 ];
 
 fn sample() -> App {
@@ -36,10 +48,15 @@ fn sample() -> App {
         session(2, Tool::Claude, Status::NeedsYou, true),
         session(3, Tool::Antigravity, Status::Finished, true),
         session(4, Tool::Shell, Status::Idle, true),
+        session(5, Tool::Dynamic("dot"), Status::Idle, true),
     ];
-    for (s, name) in
-        sessions.iter_mut().zip(["Refactor parser", "Review API changes", "Update documentation", "Project terminal"])
-    {
+    for (s, name) in sessions.iter_mut().zip([
+        "Refactor parser",
+        "Review API changes",
+        "Update documentation",
+        "Project terminal",
+        "Dot",
+    ]) {
         s.title = name.into();
         s.cwd = Some("/workspace/example".into());
         s.created_at = now - 1200;
@@ -62,8 +79,13 @@ fn sample() -> App {
     sessions[2].host = Some("buildbox".into());
     let (mut app, _) = app_with(sessions, vec![]);
     app.cfg.host_name = Some("workstation".into());
-    app.cfg.sidebar_width = 37;
-    app.theme = Theme::from_palette(&crate::config::Palette::from_parts(BASE, (192, 202, 245), (26, 27, 38), None));
+    app.cfg.sidebar_width = 40;
+    app.cfg.sidebar.parts =
+        ["title", "resources", "usage", "cloud", "sessions"].into_iter().map(str::to_owned).collect();
+    app.state.providers =
+        vec![crate::providers::Info { id: "dot".into(), label: "Dot".into(), cloud: true, ..Default::default() }];
+    app.dot.profile = Some(crate::pet::Profile { name: Some("Dot".into()), ..Default::default() });
+    app.theme = Theme::from_palette(&crate::config::Palette::from_parts(BASE, FOREGROUND, BACKGROUND, None));
     app.state.start_dir = "/workspace/example".into();
     app.state.attention_capable = true;
     app.state.work_queue_capable = true;
@@ -116,19 +138,17 @@ fn sample() -> App {
     }];
     app.state.hosts = app.hosts.clone();
     app.state.usage.claude = vec![UsageWindow {
-        label: "5h".into(),
-        used_percent: Some(28.0),
-        resets_at: Some(now + 7200),
+        label: "wk".into(),
+        used_percent: Some(42.0),
+        resets_at: Some(now + 172800),
         updated_at: now,
     }];
     app.state.usage.codex = vec![UsageWindow {
-        label: "5h".into(),
-        used_percent: Some(36.0),
-        resets_at: Some(now + 10800),
+        label: "wk".into(),
+        used_percent: Some(37.0),
+        resets_at: Some(now + 518400),
         updated_at: now,
     }];
-    app.state.errors =
-        vec![crate::protocol::LogEntry::new(now - 90, "Example: optional host is offline; reconnect when available")];
     app.state.scans = vec![ScanInfo {
         id: "example-review".into(),
         repo: "/workspace/example".into(),
@@ -165,29 +185,8 @@ fn sample() -> App {
         reason: "Waiting for the current turn to finish".into(),
     }];
     app.state.attention.queued.insert(1, 1);
-    app.frame = Some((
-        1,
-        frame(&[
-            "",
-            "  Codex · example project",
-            "",
-            "  › Improve the parser diagnostics and check the result.",
-            "",
-            "  • I found the parser entry point and the existing error types.",
-            "    The update preserves the source location when an expression is incomplete.",
-            "",
-            "    src/parser.rs       +24 -8",
-            "    src/diagnostic.rs   +12 -3",
-            "",
-            "  • Running the focused parser checks…",
-            "",
-            "    ✓ nested expressions",
-            "    ✓ missing closing delimiter",
-            "    ✓ useful source locations",
-            "",
-            "  › ",
-        ]),
-    ));
+    app.state.sessions[1].detail = "Approve the next check".into();
+    app.frame = Some((1, agent_frame(WIDTH - 41, HEIGHT - 1)));
     app
 }
 
@@ -203,102 +202,89 @@ fn frame(lines: &[&str]) -> ScreenFrame {
     }
 }
 
-fn xml(s: &str) -> String {
-    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;")
-}
-
-fn color(c: Color, background: bool) -> String {
-    let (r, g, b) = match c {
-        Color::Reset => {
-            if background {
-                (26, 27, 38)
-            } else {
-                (192, 202, 245)
-            }
-        }
-        Color::Rgb(r, g, b) => (r, g, b),
-        Color::Indexed(i) => {
-            crate::config::Palette::from_parts(BASE, (192, 202, 245), (26, 27, 38), None).get(i.into())
-        }
-        Color::Black => BASE[0],
-        Color::Red => BASE[1],
-        Color::Green => BASE[2],
-        Color::Yellow => BASE[3],
-        Color::Blue => BASE[4],
-        Color::Magenta => BASE[5],
-        Color::Cyan => BASE[6],
-        Color::Gray => BASE[7],
-        Color::DarkGray => BASE[8],
-        Color::LightRed => BASE[9],
-        Color::LightGreen => BASE[10],
-        Color::LightYellow => BASE[11],
-        Color::LightBlue => BASE[12],
-        Color::LightMagenta => BASE[13],
-        Color::LightCyan => BASE[14],
-        Color::White => BASE[15],
-    };
-    format!("#{r:02x}{g:02x}{b:02x}")
+/// Feed colored synthetic agent output through the production terminal emulator.
+fn agent_frame(cols: u16, rows: u16) -> ScreenFrame {
+    let mut lines = vec![
+        "".to_string(),
+        "  \x1b[1;97mCodex\x1b[0m \x1b[2m· example project\x1b[0m".into(),
+        "  \x1b[2m/workspace/example · feature/parser\x1b[0m".into(),
+        "".into(),
+        "\x1b[48;2;42;44;46m › Improve the parser diagnostics and check the result.\x1b[K\x1b[0m".into(),
+        "".into(),
+        "  \x1b[32m•\x1b[0m \x1b[1mExplored\x1b[0m the parser and existing diagnostic types".into(),
+        "    \x1b[2mRead\x1b[0m \x1b[94msrc/parser.rs\x1b[0m, \x1b[94msrc/diagnostic.rs\x1b[0m".into(),
+        "".into(),
+        "  \x1b[32m•\x1b[0m \x1b[1mEdited\x1b[0m \x1b[94msrc/parser.rs\x1b[0m \x1b[32m(+24)\x1b[0m \x1b[31m(-8)\x1b[0m"
+            .into(),
+        "    \x1b[2m@@ fn parse_expression(&mut self) -> Result<Expr>\x1b[0m".into(),
+        "    \x1b[31m- return Err(Error::UnexpectedToken);\x1b[0m".into(),
+        "    \x1b[32m+ return Err(Diagnostic::unexpected(token)\x1b[0m".into(),
+        "    \x1b[32m+     .with_location(self.source.location()));\x1b[0m".into(),
+        "".into(),
+        "  \x1b[32m•\x1b[0m \x1b[1mRan\x1b[0m \x1b[96mcargo test parser --lib\x1b[0m".into(),
+        "    \x1b[2mrunning 16 tests\x1b[0m".into(),
+        "    \x1b[32mtest result: ok. 16 passed; 0 failed\x1b[0m \x1b[2m· 0.42s\x1b[0m".into(),
+        "".into(),
+        "  \x1b[1mUpdated parser diagnostics\x1b[0m".into(),
+        "  Source locations now stay attached to incomplete expressions.".into(),
+        "".into(),
+        "  \x1b[32m✓\x1b[0m Nested expressions retain their context".into(),
+        "  \x1b[32m✓\x1b[0m Missing delimiters point to the opening token".into(),
+        "  \x1b[32m✓\x1b[0m Focused checks pass".into(),
+    ];
+    while lines.len() < usize::from(rows.saturating_sub(4)) {
+        lines.push(String::new());
+    }
+    lines.extend([
+        "\x1b[48;2;42;44;46m › Add a regression check for nested calls\x1b[K\x1b[0m".into(),
+        "\x1b[48;2;42;44;46m\x1b[K\x1b[0m".into(),
+        "  \x1b[96mGPT-6.1 · Codex\x1b[0m \x1b[2m·\x1b[0m \x1b[95mWeekly 63% left\x1b[0m".into(),
+    ]);
+    let input = format!("\x1b[?25l{}", lines.join("\r\n"));
+    let mut term = Term::new(TermConfig::default(), &TermSize::new(usize::from(cols), usize::from(rows)), VoidListener);
+    let mut parser: Processor<StdSyncHandler> = Processor::new();
+    parser.advance(&mut term, input.as_bytes());
+    crate::screen::build_frame(&term)
 }
 
 fn capture(root: &Path, entries: &mut Vec<Value>, id: &str, title: &str, app: &mut App) {
-    let mut terminal = Terminal::new(TestBackend::new(WIDTH, HEIGHT)).unwrap();
+    // The README hero is a genuinely smaller production viewport, so its type
+    // remains readable when GitHub fits the image to the page's content width.
+    let (width, height, sidebar) = if id == "01-workspace" { (120, 34, 30) } else { (WIDTH, HEIGHT, 40) };
+    app.cfg.sidebar_width = sidebar;
+    if let Some((session, screen)) = &mut app.frame {
+        if *session == 1 {
+            *screen = agent_frame(width - sidebar - 1, height - 1);
+        } else {
+            screen.cols = width - sidebar - 1;
+            screen.rows = height - 1;
+        }
+    }
+    let mut terminal = Terminal::new(TestBackend::new(width, height)).unwrap();
+    let mut cursor = None;
     terminal
         .draw(|f| {
-            render(f, app);
+            cursor = render(f, app);
         })
         .unwrap();
     let buffer = terminal.backend().buffer();
-    let mut svg = format!("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"{}\" height=\"{}\" viewBox=\"0 0 {} {}\"><title>{}</title><rect width=\"100%\" height=\"100%\" fill=\"#1a1b26\"/>", WIDTH*10+32, HEIGHT*20+32, WIDTH*10+32, HEIGHT*20+32, xml(title));
-    let mut text = String::new();
-    for y in 0..HEIGHT {
-        for x in 0..WIDTH {
-            let cell = &buffer[(x, y)];
-            let mut fg = cell.fg;
-            let mut bg = cell.bg;
-            if cell.modifier.contains(Modifier::REVERSED) {
-                std::mem::swap(&mut fg, &mut bg);
-            }
-            if bg != Color::Reset {
-                write!(
-                    svg,
-                    "<rect x=\"{}\" y=\"{}\" width=\"10\" height=\"20\" fill=\"{}\"/>",
-                    16 + x * 10,
-                    16 + y * 20,
-                    color(bg, true)
-                )
-                .unwrap();
-            }
-            text.push_str(cell.symbol());
-        }
-        text.push('\n');
+    let mut ansi = b"\x1b[?1049h\x1b[0m\x1b[2J\x1b[H\x1b[?25l".to_vec();
+    {
+        // Use ratatui's actual output backend, including its SGR handling and
+        // wide-cell diffing. Foot draws these bytes; no SVG approximates it.
+        let mut backend = CrosstermBackend::new(&mut ansi);
+        let empty = Buffer::empty(buffer.area);
+        backend.draw(empty.diff(buffer).into_iter()).unwrap();
     }
-    svg.push_str(
-        "<g font-family=\"JetBrains Mono,DejaVu Sans Mono,monospace\" font-size=\"15\" xml:space=\"preserve\">",
-    );
-    for y in 0..HEIGHT {
-        for x in 0..WIDTH {
-            let cell = &buffer[(x, y)];
-            if cell.symbol().trim().is_empty() {
-                continue;
-            }
-            let fg = if cell.modifier.contains(Modifier::REVERSED) { cell.bg } else { cell.fg };
-            let bold = if cell.modifier.contains(Modifier::BOLD) { "bold" } else { "normal" };
-            write!(
-                svg,
-                "<text x=\"{}\" y=\"{}\" fill=\"{}\" font-weight=\"{}\">{}</text>",
-                16 + x * 10,
-                31 + y * 20,
-                color(fg, false),
-                bold,
-                xml(cell.symbol())
-            )
-            .unwrap();
-        }
+    ansi.extend_from_slice(b"\x1b[0m");
+    if let Some((x, y, _)) = cursor {
+        ansi.extend_from_slice(format!("\x1b[{};{}H\x1b[?25h", y + 1, x + 1).as_bytes());
     }
-    svg.push_str("</g></svg>\n");
-    fs::write(root.join(format!("{id}.svg")), svg).unwrap();
+    let text =
+        (0..height).map(|y| (0..width).map(|x| buffer[(x, y)].symbol()).collect::<String>() + "\n").collect::<String>();
+    fs::write(root.join(format!("{id}.ansi")), ansi).unwrap();
     fs::write(root.join(format!("{id}.txt")), text).unwrap();
-    entries.push(json!({"id":id,"title":title,"svg":format!("{id}.svg"),"image":format!("{id}.png")}));
+    entries.push(json!({"id":id,"title":title,"ansi":format!("{id}.ansi"),"image":format!("{id}.png"),"columns":width,"rows":height,"sidebar_columns":sidebar}));
 }
 
 #[test]
@@ -410,8 +396,15 @@ fn capture_all_screens() {
         ),
     ];
     for (id, title, dialog) in dialogs {
+        if id == "07-errors" {
+            app.state.errors = vec![crate::protocol::LogEntry::new(
+                crate::util::now_secs() - 90,
+                "Example: optional host is offline; reconnect when available",
+            )];
+        }
         app.dialog = Some(dialog);
         capture(root, &mut entries, id, title, &mut app);
+        app.state.errors.clear();
     }
     let mut draft = crate::edit::Draft::default();
     draft.insert("How do I inspect a session on another host?");
@@ -553,14 +546,14 @@ fn capture_all_screens() {
     let provider: crate::providers::Provider = serde_json::from_value(json!({"id":"dot","label":"Dot","command":["cepheus","dot","chat"],"cloud":true,"chat_snapshot":settings.path().join("transcript.json")})).unwrap();
     crate::providers::install(&[provider]).unwrap();
     app = sample();
-    app.state.sessions[0].tool = Tool::Dynamic("dot");
-    app.state.sessions[0].title = "Cloud conversation".into();
+    app.current = Some(Sel::Session(5));
+    app.frame = None;
     app.dot.profile = Some(crate::pet::Profile { name: Some("Dot".into()), ..Default::default() });
     app.dot.items=vec![crate::remote::chat::Item::User {text:"Summarize the parser changes.".into(),client_id:None,images:vec![],at:None},crate::remote::chat::Item::Assistant {text:"## Parser diagnostics\n\nThe update keeps **source locations** attached to syntax errors.\n\n- Nested expressions retain their context.\n- Missing delimiters point to the opening token.\n- The focused checks pass.\n\n```rust\nlet report = parser.diagnostics();\n```".into(),questions:vec![],at:None}];
     app.dot.draft = "Which edge cases are covered?".into();
     app.mode = Mode::Insert;
     capture(root, &mut entries, "38-cloud-chat", "Native cloud conversation", &mut app);
     crate::providers::install(&[]).unwrap();
-    fs::write(root.join("manifest.json"),serde_json::to_string_pretty(&json!({"schema":1,"renderer":"production ratatui view::render","columns":WIDTH,"rows":HEIGHT,"data":"synthetic; no owner sessions or credentials","screens":entries})).unwrap()+"\n").unwrap();
+    fs::write(root.join("manifest.json"),serde_json::to_string_pretty(&json!({"schema":1,"renderer":"production ratatui view::render","columns":WIDTH,"rows":HEIGHT,"terminal":{"font":"JetBrainsMono Nerd Font","font_size_points":12,"foreground":FOREGROUND,"background":BACKGROUND,"palette":BASE},"data":"synthetic; no owner sessions or credentials","screens":entries})).unwrap()+"\n").unwrap();
     println!("Captured {} desktop screens in {}", entries.len(), root.display());
 }

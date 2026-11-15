@@ -1,6 +1,6 @@
 # Android screenshots
 
-Captured from the real Android APK on a disposable emulator connected to an isolated service with synthetic data. The gallery contains no owner sessions or credentials.
+Captured from the real Android APK on a disposable emulator connected to an isolated service with synthetic data. The gallery contains no owner sessions or credentials. Dark is the default on new installs; the gallery also includes the optional Light theme.
 
 Regenerate with `tools/capture_android_screenshots.py` and import with `python3 tools/capture_screenshots.py --android CAPTURE_DIRECTORY`.
 

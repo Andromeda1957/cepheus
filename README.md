@@ -15,11 +15,13 @@ running. An optional native Android app controls the same sessions remotely.
 
 ![Cepheus desktop workspace](docs/screenshots/desktop/01-workspace.png)
 
-<img src="docs/screenshots/android/03-home.png" alt="Cepheus Android sessions home" width="320">
+<img src="docs/screenshots/android/03-home.png" alt="Cepheus Android sessions in dark mode" width="280">
 
 The [screen gallery](docs/screenshots/README.md) covers the desktop and Android
 interfaces with synthetic example sessions. Captures use the actual application
 renderers and contain no personal conversations or live account data.
+The desktop follows your terminal's palette and font. Android starts in dark
+mode; Light and System default remain available in Settings.
 
 ## What it does
 

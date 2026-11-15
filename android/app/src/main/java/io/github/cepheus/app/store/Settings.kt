@@ -13,7 +13,7 @@ enum class ThemeChoice(val key: String, val label: String) {
     }
 
     companion object {
-        fun of(key: String?): ThemeChoice = entries.firstOrNull { it.key == key } ?: SYSTEM
+        fun of(key: String?): ThemeChoice = entries.firstOrNull { it.key == key } ?: DARK
     }
 }
 
@@ -28,7 +28,7 @@ data class AppSettings(
     val notifyFinished: Boolean = true,
     val notifyNeedsYou: Boolean = true,
     val notifyErrors: Boolean = true,
-    val theme: ThemeChoice = ThemeChoice.SYSTEM,
+    val theme: ThemeChoice = ThemeChoice.DARK,
 )
 
 class SettingsStore(private val kv: KeyValue) {

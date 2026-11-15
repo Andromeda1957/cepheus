@@ -15,6 +15,9 @@ The app includes:
   Scripting, Service, Scheduler, Jobs and Queue.
 - Light, dark and system themes, background delivery and notification replies.
 
+Dark is the default theme from launch. Choose Light or System default in Settings → Theme;
+explicit saved choices stay in effect.
+
 The application ID is `io.github.cepheus.app`; debug builds use
 `io.github.cepheus.app.debug`. These builds install independently of other apps.
 The desktop gateway and phone must support the same protocol facilities. A
