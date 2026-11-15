@@ -1692,23 +1692,3 @@ fn ctrl_v_in_a_session_on_another_host_pastes_this_machines_clipboard() {
     ctrl(&mut app, 'v');
     assert_eq!(sent(&rx), vec![serde_json::json!({"t": "input", "id": 1, "data": "\u{16}"})]);
 }
-
-#[test]
-fn a_desktop_answer_preserves_phone_answers_added_after_its_cached_history() {
-    let dir = crate::testsupport::TempDir::new("desktop-phone-history");
-    let (mut app, _rx) = app_with(vec![], vec![]);
-    app.ask_dir = Some(dir.path().to_path_buf());
-    let asked = |question: &str| crate::ask::Asked {
-        question: question.into(),
-        who: "test".into(),
-        answer: "answer".into(),
-        at: 1,
-        ..Default::default()
-    };
-    app.ask_history = crate::ask::load_history(dir.path());
-    crate::ask::append_history(dir.path(), &asked("phone")).unwrap();
-    app.answered(asked("desktop"));
-    let history = crate::ask::load_history(dir.path());
-    assert_eq!(history.iter().map(|a| a.question.as_str()).collect::<Vec<_>>(), ["phone", "desktop"]);
-    assert_eq!(app.ask_history, history);
-}

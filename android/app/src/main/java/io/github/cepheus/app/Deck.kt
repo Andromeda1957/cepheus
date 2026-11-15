@@ -812,7 +812,6 @@ object Deck {
             val marker = sessionStateMarker()
             val timeout = when (action) {
                 "install", "skills_sync", "scan" -> 360_000L
-                "ask" -> 240_000L
                 "scripts", "plugin", "service", "dev" -> 180_000L
                 else -> 45_000L
             }

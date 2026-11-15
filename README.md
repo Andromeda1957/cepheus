@@ -8,6 +8,7 @@ running. An optional native Android app controls the same sessions remotely.
 [All screenshots](docs/screenshots/README.md) ·
 [Android app](android/README.md) ·
 [Plugins](plugins/README.md) ·
+[Tasks dashboard](lua/tasks.md) ·
 [Lua API](skills/cepheus-plugin/api.md) ·
 [License](LICENSE)
 
@@ -18,10 +19,22 @@ running. An optional native Android app controls the same sessions remotely.
 <img src="docs/screenshots/android/03-home.png" alt="Cepheus Android sessions in dark mode" width="280">
 
 The [screen gallery](docs/screenshots/README.md) covers the desktop and Android
-interfaces with synthetic example sessions. Captures use the actual application
-renderers and contain no personal conversations or live account data.
+interfaces in isolated demo workspaces. Desktop captures show the running TUI
+with a real Codex session, Git worktrees and Markdown tasks. No owner projects,
+credentials or private conversations appear.
 The desktop follows your terminal's palette and font. Android starts in dark
 mode; Light and System default remain available in Settings.
+
+### Tasks
+
+![Tasks dashboard](docs/screenshots/desktop/39-tasks-open.png)
+
+### Branches
+
+![Branches and worktrees](docs/screenshots/desktop/10-branches.png)
+
+The [complete desktop gallery](docs/screenshots/DESKTOP.md) also shows the queue,
+chores, machines, usage, session controls, plugin pickers and command overlays.
 
 ## What it does
 
@@ -30,7 +43,7 @@ mode; Light and System default remain available in Settings.
 - See session activity, requests for input, completed work, subagents, resource
   usage, provider usage, and Git branches in one sidebar.
 - Resume saved conversations, search history, send messages through supported
-  native provider interfaces, and ask quick questions.
+  native provider interfaces.
 - Connect multiple Linux hosts over authenticated TLS; start agents on another
   host or send builds and test shards to disposable Podman containers.
 - Run headless jobs, dependent work queues, recurring chores, and captured-target
@@ -84,8 +97,8 @@ Useful commands:
 | `:term` | Open a terminal |
 | `:resume` | Browse saved conversations |
 | `:branches` | Inspect branches across hosts |
+| `:tasks` | Browse configured task sources and their task states |
 | `:machines`, `:usage` | Machine resources and provider usage |
-| `:ask Explain this change` | Ask a quick question |
 | `:broadcast Review the current requirements` | Message working agents |
 | `:jobs`, `:queue`, `:chores`, `:slots` | Inspect background work and scheduling |
 | `:supervisor` | Inspect attention delivery and optional supervisor policy |

@@ -88,20 +88,60 @@ fn invalid_command_cannot_starve_a_later_source_and_failures_are_categorical() {
 }
 #[test]
 fn an_unchanged_publication_renews_freshness_without_a_write() {
+    use std::io::Write;
     let d = TempDir::new("source-unchanged");
     let mut q = store::Queue::load(d.path()).unwrap();
-    let mut spec = descriptor(&d, "one");
-    spec.mode = "push".into();
-    spec.argv.clear();
+    let spec = descriptor(&d, "one");
     let token = q.source_register(spec).unwrap()["publisher_token"].as_str().unwrap().to_string();
-    q.source_publish("one", "owner", &token, 1, Some(vec![task()]), 100).unwrap();
+    d.write("TASKS.md", "- [ ] task\n");
+    let (code, output, error) = crate::task_source::invoke(
+        &[
+            "--provider".into(),
+            "markdown".into(),
+            "--source-id".into(),
+            "one".into(),
+            "--repository-root".into(),
+            d.path().to_string_lossy().into_owned(),
+        ],
+        &|_, _| panic!("Markdown refresh must not invoke GitHub"),
+    );
+    assert_eq!((code, error.as_str()), (0, ""));
+    let published: Vec<Task> = serde_json::from_str(&output).unwrap();
+    let job = q
+        .refresh_jobs
+        .add(
+            "first-refresh".into(),
+            "Task source refresh".into(),
+            crate::job_sessions::Spec { argv: vec!["true".into()], cwd: d.path().into(), ..Default::default() },
+            "local".into(),
+            None,
+        )
+        .unwrap();
+    let job_path = q.refresh_jobs.dir(job.id);
+    crate::job_sessions::store::append_log(&job_path.join("output.log")).unwrap().write_all(output.as_bytes()).unwrap();
+    crate::job_sessions::store::write(
+        &job_path.join("exit.json"),
+        &crate::job_sessions::Exit {
+            nonce: q.refresh_jobs.records[&job.id].intent.nonce.clone(),
+            code: Some(0),
+            signal: None,
+            finished_at: 100,
+            stopped: false,
+            error: None,
+        },
+    )
+    .unwrap();
+    q.sources.get_mut("one").unwrap().refresh_job = Some(job.id);
+    q.refresh_sources(std::path::Path::new("/missing-fixture-executor"), 100, false).unwrap();
+    assert_eq!(q.sources["one"].tasks, published, "command refresh consumes the Markdown CLI's complete task array");
+    assert!(q.sources["one"].info(100).fresh);
     let path = q.source_path("one");
     std::fs::remove_file(&path).unwrap();
-    q.source_publish("one", "owner", &token, 2, Some(vec![task()]), 500).unwrap();
+    q.source_publish("one", "owner", &token, 2, Some(published.clone()), 500).unwrap();
     assert!(!path.exists(), "the same rows are not written again");
     assert_eq!((q.sources["one"].sequence, q.sources["one"].updated_at), (2, Some(500)));
     assert!(q.sources["one"].info(500).fresh);
-    let mut changed = task();
+    let mut changed = published[0].clone();
     changed.state = "stopped".into();
     q.source_publish("one", "owner", &token, 3, Some(vec![changed]), 501).unwrap();
     assert!(path.exists(), "changed rows are written");

@@ -41,12 +41,13 @@ fn a_paired_phone_uses_desktop_controls() {
     let socket = opts.socket.clone();
     let service = thread::spawn(move || crate::service::run(opts));
     let mut hub_opts = hub_options(&dir, vec![PHONE]);
-    let answer = dir.path().join("answer.sh");
-    fs::write(&answer, "#!/bin/sh\nsleep 1\nprintf 'fixture answer\\n'\n").unwrap();
-    fs::set_permissions(&answer, fs::Permissions::from_mode(0o700)).unwrap();
     let config_file = dir.path().join("config.json");
-    fs::write(&config_file, json!({"claude_command":[answer],"scans_dir":dir.path().join("scans"),"scheduler":{"probe":{"root":dir.path().join("proc")}}}).to_string())
-        .unwrap();
+    fs::write(
+        &config_file,
+        json!({"scans_dir":dir.path().join("scans"),"scheduler":{"probe":{"root":dir.path().join("proc")}}})
+            .to_string(),
+    )
+    .unwrap();
     hub_opts.config_file = Some(config_file);
     let identity = store::load_or_create_identity(&hub_opts.dir, "127.0.0.1").unwrap();
     let pin = identity.fingerprint.clone();
@@ -183,23 +184,6 @@ fn a_paired_phone_uses_desktop_controls() {
             .contains("no longer working; queued broadcast was not sent"),
         "{skipped}"
     );
-    // Slow question execution does not block the WebSocket's ping reader.
-    send(&mut ws, json!({"t":"control","rid":20,"action":"ask","text":"/code Where is this repo?"}));
-    send(&mut ws, json!({"t":"ping","rid":21}));
-    assert_eq!(reply(&mut ws, 21)["t"], "pong");
-    let asked = reply(&mut ws, 20);
-    assert_eq!(asked["data"]["answer"], "fixture answer", "{asked}");
-    assert_eq!(asked["data"]["error"], false);
-    let history = control(&mut ws, 22, "ask_history", json!({}));
-    assert_eq!(history["data"]["items"][0]["answer"], "fixture answer");
-
-    let history_file = crate::ask::history_path(&dir.path().join("state"));
-    fs::write(&history_file, "{broken history").unwrap();
-    let unsaved = control(&mut ws, 44, "ask", json!({"text":"/code another question"}));
-    assert_eq!(unsaved["data"]["answer"], "fixture answer", "{unsaved}");
-    assert!(unsaved["data"]["history_warning"].as_str().is_some_and(|s| s.contains("preserved")), "{unsaved}");
-    assert_eq!(fs::read_to_string(&history_file).unwrap(), "{broken history");
-
     let skill = dir.path().join("fixture-skill");
     fs::create_dir(&skill).unwrap();
     fs::write(skill.join("SKILL.md"), "---\nname: fixture-skill\ndescription: fixture\n---\nRead only.\n").unwrap();

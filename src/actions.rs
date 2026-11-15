@@ -156,7 +156,6 @@ pub const COMMANDS: &[Spec] = &[
     spec("movein", &["move-in", "move_in"], "movein", "move the selected outside session into the deck", Args::None),
     crate::extensions::desktop_commands::COMMANDS[0],
     spec("branches", &["br"], "branches", "every branch on every host and the agents on each", Args::None),
-    crate::extensions::quick_ask_commands::COMMANDS[0],
     crate::extensions::security_scans_commands::COMMANDS[0],
     crate::extensions::security_scans_commands::COMMANDS[1],
     crate::extensions::agent_extensions_commands::COMMANDS[0],

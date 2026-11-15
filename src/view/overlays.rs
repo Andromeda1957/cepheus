@@ -1,4 +1,4 @@
-//! The overlays the commands open, drawn as F2 is: every branch on every host (F3), quick questions (F4), the
+//! The overlays the commands open, drawn as F2 is: every branch on every host (F3), the
 //! security scans, reports and scripts' pickers; and the sections and badges scripts add.
 //!
 //! The windows share one frame: text inset two columns behind the selection bar, groups under a bold heading
@@ -14,8 +14,7 @@ use unicode_width::UnicodeWidthStr;
 use super::panel::{
     line_width, note, search_rows, section, show, tiles, tiles_width, Cell, Column, Panel, Tab, Table, Tile,
 };
-use super::{fit, pad_line, plain, spinner, tool_icon, wrap_text, wrap_words};
-use crate::ask::{self, Route};
+use super::{fit, pad_line, plain, spinner, tool_icon, wrap_text};
 use crate::lua::{ItemKind, Pick, Section, Segment};
 use crate::protocol::{BranchInfo, SessionInfo};
 use crate::theme::Theme;
@@ -270,10 +269,6 @@ pub fn branches_view(
     show(f, area, width, panel, viewport, t);
 }
 
-/// Who answers, as the quick-question overlay says it.
-#[path = "../../plugins/quick-ask/view.rs"]
-mod quick_ask;
-pub use quick_ask::{ask_view, prepare_ask};
 #[path = "../../plugins/security-scans/view.rs"]
 mod security_scans;
 pub use security_scans::scans_view;

@@ -129,7 +129,7 @@ launch, transcript and native messaging behavior. Bundled integrations include:
 
 - Development services through the owned-process supervisor.
 - [Repository mirroring](git-mirror/README.md), host bootstrap and sign-in synchronization.
-- Quick questions, AI titles, security scans and extension installation.
+- AI titles, security scans and extension installation.
 - Desktop focus, notifications and terminal adapters.
 - Provider account profiles and opt-in account rotation.
 - Native peer messages and provider-specific captured-target operations.

@@ -12,7 +12,6 @@ mod agent_update;
 mod antigravity;
 #[path = "../plugins/api-cost/collector.rs"]
 mod api_cost;
-mod ask;
 mod attention;
 mod claude;
 mod client;
@@ -96,7 +95,6 @@ usage:
                              repo (owner/repo), git URL, folder, npm:<package> or mcp:<name>=<command>
   cepheus uninstall <source> [--agents …]   remove what add installed
   cepheus skills [list|sync|remove <name>]  the deck's skills, linked for Claude, Codex and agy
-  cepheus ask <question>  a quick question (/web, /code, /claude, /codex, /agy choose who answers)
   cepheus lua [check|example]  load init.lua and the plugins and report errors; an example init.lua
   cepheus dot setup|chat|probe|login  connect to an existing cloud Dot
   cepheus hosts           list the other machines this deck drives and whether they answer
@@ -218,7 +216,6 @@ fn main() {
             installer::run_cli(&rest)
         }
         Some("skills") => skills::run(&args[1..]),
-        Some("ask") => ask::run_cli(&args[1..]),
         Some("run") => offload::run_cli(&args[1..]),
         Some("shard") => offload::shard::cli(&args[1..]),
         Some("lua") => lua::run_cli(&args[1..]),

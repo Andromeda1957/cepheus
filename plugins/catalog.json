@@ -113,29 +113,6 @@
         }
       ]
     },
-    "quick-ask": {
-      "kind": "builtin",
-      "name": "Quick questions",
-      "description": "Route one-shot code and web questions to configured providers.",
-      "source": "plugins/quick-ask/native.rs",
-      "default": true,
-      "commands": [
-        {
-          "name": "ask",
-          "description": "Ask a quick question",
-          "args": [
-            "text"
-          ]
-        }
-      ],
-      "phone_actions": [
-        "ask",
-        "ask_history"
-      ],
-      "tui_commands": [
-        "ask"
-      ]
-    },
     "ai-titles": {
       "kind": "builtin",
       "name": "AI titles",
@@ -507,6 +484,13 @@
       "source": "plugins/providers/permission_hook.rs",
       "name": "Native Read permission hook",
       "description": "Bundled Claude Read responder with at most one eligible or uncertain claimed attempt per user turn; supervisor off and ineligible requests stay manual without claiming the turn.",
+      "default": true
+    },
+    "tasks": {
+      "kind": "builtin",
+      "name": "Tasks",
+      "description": "Paged task dashboard for configured published task sources, with native conversation navigation and explicit queue specifications.",
+      "source": "lua/tasks.lua",
       "default": true
     }
   }

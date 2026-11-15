@@ -220,8 +220,10 @@ def main() -> None:
 
         journey.tools()
         shot("17-tools", "Deck tools")
-        pages = ["Queue", "Jobs", "Scheduler", "Branches", "Ask", "Broadcast", "Terminals", "Scans", "Extensions", "Scripting", "Service"]
-        for index, page in enumerate(pages, 18):
+        pages = [(18, "Queue"), (19, "Jobs"), (20, "Scheduler"), (21, "Branches"),
+                 (23, "Broadcast"), (24, "Terminals"), (25, "Scans"), (26, "Extensions"),
+                 (27, "Scripting"), (28, "Service")]
+        for index, page in pages:
             journey.tools(page)
             time.sleep(1.5)
             shot(f"{index:02}-{page.lower()}", page)

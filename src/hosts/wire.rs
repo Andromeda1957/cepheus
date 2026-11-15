@@ -66,7 +66,6 @@ pub enum HostReq {
     },
     PhoneModels,
     PhoneStats,
-    PhoneAskHistory,
 
     /// This physical interface's public key digest, over an authenticated channel.
     ViewerIdentity,
@@ -179,9 +178,6 @@ pub struct ProfileLogin {
 pub enum HostResp {
     PhoneModels {
         tools: serde_json::Value,
-    },
-    PhoneAskHistory {
-        items: serde_json::Value,
     },
 
     ViewerIdentity {

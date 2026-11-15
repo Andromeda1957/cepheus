@@ -223,44 +223,8 @@ fn selection_menus_keep_the_last_item_visible_in_a_short_terminal() {
 }
 
 #[test]
-fn a_question_can_be_pasted_and_up_brings_back_an_earlier_one() {
-    let (mut app, _rx) = tests::app_with(vec![], vec![]);
-    let asked = crate::ask::Asked { question: "earlier question".into(), answer: "Lima.".into(), ..Default::default() };
-    app.ask_history.push(asked);
-    app.dialog = Some(Dialog::Ask { draft: Default::default(), route: None, scroll: 0 });
-    let typed = |app: &App| match &app.dialog {
-        Some(Dialog::Ask { draft, .. }) => draft.text().to_string(),
-        _ => panic!("the box stays open"),
-    };
-    // A paste into the box was dropped (owner, 2026-11-10).
-    app.handle_input(Event::Paste("capital\r\nof peru".into()));
-    assert_eq!(typed(&app), "capital\nof peru");
-    assert!(draw(&mut app, 80, 20).join("\n").contains("› capital"));
-    key(&mut app, KeyCode::Up);
-    assert_eq!(typed(&app), "earlier question");
-    key(&mut app, KeyCode::Down);
-    assert_eq!(typed(&app), "capital\nof peru");
-}
-
-#[test]
-fn answer_and_confirmation_scrolling_are_bounded_without_performing_actions() {
+fn confirmation_scrolling_is_bounded_without_performing_actions() {
     let (mut app, rx) = tests::app_with(vec![], vec![]);
-    app.ask_history.push(crate::ask::Asked {
-        question: "A question".into(),
-        who: "test".into(),
-        at: 1,
-        answer: (0..60).map(|i| format!("answer {i:02}")).collect::<Vec<_>>().join("\n"),
-        ..Default::default()
-    });
-    app.dialog = Some(Dialog::Ask { draft: Default::default(), route: None, scroll: 0 });
-    draw(&mut app, 60, 15);
-    for _ in 0..100 {
-        wheel(&mut app, false);
-    }
-    let first = draw(&mut app, 60, 15);
-    assert!(first.join("\n").contains("A question"));
-    wheel(&mut app, true);
-    assert_ne!(first, draw(&mut app, 60, 15), "the first reverse step moves after overscrolling");
     app.dialog = Some(Dialog::Confirm { text: "A long confirmation. ".repeat(80), action: Action::Shutdown });
     let first = draw(&mut app, 60, 15);
     rx.try_iter().for_each(drop);

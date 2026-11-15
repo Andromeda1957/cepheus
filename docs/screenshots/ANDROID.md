@@ -88,10 +88,6 @@ Regenerate with `tools/capture_android_screenshots.py` and import with `python3 
 
 <img src="android/21-branches.png" alt="Branches" width="360">
 
-## Ask
-
-<img src="android/22-ask.png" alt="Ask" width="360">
-
 ## Broadcast
 
 <img src="android/23-broadcast.png" alt="Broadcast" width="360">

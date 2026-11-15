@@ -545,11 +545,6 @@ fn requests_from(
         let resp = match req {
             HostReq::PhoneForward { .. } => unreachable!("forwarding is unwrapped once"),
             HostReq::PhoneStats => HostResp::Stats { stats: peer.stats(false) },
-            HostReq::PhoneAskHistory => HostResp::PhoneAskHistory {
-                items: serde_json::to_value(crate::ask::load_history(
-                    peer.dir.parent().context("peer state directory")?,
-                ))?,
-            },
             HostReq::PhoneModels => HostResp::PhoneModels {
                 tools: serde_json::to_value(remote::models::all(&remote::models::Homes {
                     claude: peer.logins.claude_dir.clone(),

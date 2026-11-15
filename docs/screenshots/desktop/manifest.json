@@ -1,429 +1,6 @@
 {
-  "columns": 160,
-  "data": "synthetic; no owner sessions or credentials",
-  "renderer": "production ratatui CrosstermBackend replayed in Foot; grim toplevel screencopy",
-  "rows": 44,
   "schema": 1,
-  "screens": [
-    {
-      "ansi": "01-workspace.ansi",
-      "columns": 120,
-      "id": "01-workspace",
-      "image": "01-workspace.png",
-      "rows": 34,
-      "sidebar_columns": 30,
-      "title": "Workspace and hosted agent",
-      "pixel_width": 2970,
-      "pixel_height": 1883
-    },
-    {
-      "ansi": "02-insert.ansi",
-      "columns": 160,
-      "id": "02-insert",
-      "image": "02-insert.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Typing in a hosted session",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "03-command.ansi",
-      "columns": 160,
-      "id": "03-command",
-      "image": "03-command.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Command line",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "04-empty-pane.ansi",
-      "columns": 160,
-      "id": "04-empty-pane",
-      "image": "04-empty-pane.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Session selection",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "05-new-session.ansi",
-      "columns": 160,
-      "id": "05-new-session",
-      "image": "05-new-session.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "New session",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "06-help.ansi",
-      "columns": 160,
-      "id": "06-help",
-      "image": "06-help.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Help and key bindings",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "07-errors.ansi",
-      "columns": 160,
-      "id": "07-errors",
-      "image": "07-errors.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Errors",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "08-machines.ansi",
-      "columns": 160,
-      "id": "08-machines",
-      "image": "08-machines.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Machine resources",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "09-usage.ansi",
-      "columns": 160,
-      "id": "09-usage",
-      "image": "09-usage.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Provider usage",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "10-branches.ansi",
-      "columns": 160,
-      "id": "10-branches",
-      "image": "10-branches.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Branches and worktrees",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "11-scans.ansi",
-      "columns": 160,
-      "id": "11-scans",
-      "image": "11-scans.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Security scans",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "12-broadcast.ansi",
-      "columns": 160,
-      "id": "12-broadcast",
-      "image": "12-broadcast.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Broadcast",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "13-confirm.ansi",
-      "columns": 160,
-      "id": "13-confirm",
-      "image": "13-confirm.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Service confirmation",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "14-resume.ansi",
-      "columns": 160,
-      "id": "14-resume",
-      "image": "14-resume.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Resume a saved conversation",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "15-queue.ansi",
-      "columns": 160,
-      "id": "15-queue",
-      "image": "15-queue.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Work queue",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "16-task-sources.ansi",
-      "columns": 160,
-      "id": "16-task-sources",
-      "image": "16-task-sources.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Task sources",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "17-chores.ansi",
-      "columns": 160,
-      "id": "17-chores",
-      "image": "17-chores.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Scheduled chores",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "18-attention.ansi",
-      "columns": 160,
-      "id": "18-attention",
-      "image": "18-attention.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Idle deliveries",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "19-supervisor.ansi",
-      "columns": 160,
-      "id": "19-supervisor",
-      "image": "19-supervisor.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Supervisor",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "20-hosts.ansi",
-      "columns": 160,
-      "id": "20-hosts",
-      "image": "20-hosts.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Hosts report",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "21-install-preview.ansi",
-      "columns": 160,
-      "id": "21-install-preview",
-      "image": "21-install-preview.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Extension installation preview",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "22-ask.ansi",
-      "columns": 160,
-      "id": "22-ask",
-      "image": "22-ask.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Quick questions and answers",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "23-idle-message.ansi",
-      "columns": 160,
-      "id": "23-idle-message",
-      "image": "23-idle-message.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Idle message draft",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "24-pairing.ansi",
-      "columns": 160,
-      "id": "24-pairing",
-      "image": "24-pairing.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Pair an Android device (inert example)",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "25-plugin-picker.ansi",
-      "columns": 160,
-      "id": "25-plugin-picker",
-      "image": "25-plugin-picker.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Lua plugin picker",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "26-job-chat.ansi",
-      "columns": 160,
-      "id": "26-job-chat",
-      "image": "26-job-chat.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Headless job output",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "27-job-raw.ansi",
-      "columns": 160,
-      "id": "27-job-raw",
-      "image": "27-job-raw.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Headless job raw log",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "28-terminal.ansi",
-      "columns": 160,
-      "id": "28-terminal",
-      "image": "28-terminal.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Hosted shell",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "29-private-response.ansi",
-      "columns": 160,
-      "id": "29-private-response",
-      "image": "29-private-response.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Explicitly opened delivery response",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "30-help-sessions.ansi",
-      "columns": 160,
-      "id": "30-help-sessions",
-      "image": "30-help-sessions.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Help: sessions and hotkeys",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "31-help-windows.ansi",
-      "columns": 160,
-      "id": "31-help-windows",
-      "image": "31-help-windows.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Help: windows and jobs",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "32-help-commands.ansi",
-      "columns": 160,
-      "id": "32-help-commands",
-      "image": "32-help-commands.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Help: attention and commands",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "33-fleet-slots.ansi",
-      "columns": 160,
-      "id": "33-fleet-slots",
-      "image": "33-fleet-slots.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Fleet scheduler slots",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "34-command-catalog.ansi",
-      "columns": 160,
-      "id": "34-command-catalog",
-      "image": "34-command-catalog.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Command catalog",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "35-options.ansi",
-      "columns": 160,
-      "id": "35-options",
-      "image": "35-options.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Lua options",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "36-skills.ansi",
-      "columns": 160,
-      "id": "36-skills",
-      "image": "36-skills.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Skills report",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "37-search.ansi",
-      "columns": 160,
-      "id": "37-search",
-      "image": "37-search.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Filter a window",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    },
-    {
-      "ansi": "38-cloud-chat.ansi",
-      "columns": 160,
-      "id": "38-cloud-chat",
-      "image": "38-cloud-chat.png",
-      "rows": 44,
-      "sidebar_columns": 40,
-      "title": "Native cloud conversation",
-      "pixel_width": 3940,
-      "pixel_height": 2420
-    }
-  ],
+  "renderer": "Running public Cepheus and real Codex client; Foot native pixels via private tmux and grim toplevel capture",
   "terminal": {
     "background": [
       19,
@@ -519,5 +96,497 @@
         232
       ]
     ]
-  }
+  },
+  "columns": 160,
+  "rows": 38,
+  "screens": [
+    {
+      "id": "01-workspace",
+      "title": "Workspace with real Codex and project terminal",
+      "image": "01-workspace.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098
+    },
+    {
+      "id": "02-insert",
+      "title": "Typing in a real hosted Codex session",
+      "image": "02-insert.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": "Enter"
+    },
+    {
+      "id": "03-command",
+      "title": "Cepheus command line",
+      "image": "03-command.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":queue (draft)"
+    },
+    {
+      "id": "04-empty",
+      "title": "Empty workspace before starting a session",
+      "image": "04-empty.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098
+    },
+    {
+      "id": "05-new-session",
+      "title": "New session, model and effort",
+      "image": "05-new-session.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":new"
+    },
+    {
+      "id": "06-help",
+      "title": "Help and key bindings",
+      "image": "06-help.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":help"
+    },
+    {
+      "id": "07-errors",
+      "title": "Errors from a demo Lua command",
+      "image": "07-errors.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":errors"
+    },
+    {
+      "id": "08-machines",
+      "title": "Machine resources",
+      "image": "08-machines.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":machines"
+    },
+    {
+      "id": "09-usage",
+      "title": "Provider usage",
+      "image": "09-usage.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":usage"
+    },
+    {
+      "id": "10-branches",
+      "title": "Branches and real Git worktrees",
+      "image": "10-branches.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":branches"
+    },
+    {
+      "id": "11-scans",
+      "title": "Security scans (empty demo)",
+      "image": "11-scans.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":scans"
+    },
+    {
+      "id": "12-broadcast",
+      "title": "Broadcast while Codex works on the demo",
+      "image": "12-broadcast.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":broadcast"
+    },
+    {
+      "id": "13-confirmation",
+      "title": "Stop-service confirmation",
+      "image": "13-confirmation.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":stop"
+    },
+    {
+      "id": "14-resume",
+      "title": "Resume the demo conversation",
+      "image": "14-resume.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":resume"
+    },
+    {
+      "id": "15-queue",
+      "title": "Paused work queue",
+      "image": "15-queue.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":queue"
+    },
+    {
+      "id": "16-task-sources",
+      "title": "Live Markdown task source",
+      "image": "16-task-sources.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":queue sources"
+    },
+    {
+      "id": "17-chores",
+      "title": "Disabled scheduled chore",
+      "image": "17-chores.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":chores"
+    },
+    {
+      "id": "18-attention",
+      "title": "Idle deliveries (empty demo)",
+      "image": "18-attention.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":supervisor"
+    },
+    {
+      "id": "19-supervisor",
+      "title": "Supervisor controls",
+      "image": "19-supervisor.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":supervisor"
+    },
+    {
+      "id": "20-hosts",
+      "title": "Host configuration report",
+      "image": "20-hosts.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":hosts"
+    },
+    {
+      "id": "21-install-preview",
+      "title": "Local extension installation preview",
+      "image": "21-install-preview.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":install /workspace/example-skill --agents codex --dry-run"
+    },
+    {
+      "id": "23-idle-message",
+      "title": "Idle message draft",
+      "image": "23-idle-message.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":send --idle"
+    },
+    {
+      "id": "24-pairing",
+      "title": "Android pairing with the gateway disabled",
+      "image": "24-pairing.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":pair"
+    },
+    {
+      "id": "25-agent-plugins",
+      "title": "Agent plugin picker",
+      "image": "25-agent-plugins.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":agent-plugins"
+    },
+    {
+      "id": "26-job-chat",
+      "title": "Headless check job output",
+      "image": "26-job-chat.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":job chat 118532626250"
+    },
+    {
+      "id": "27-job-raw",
+      "title": "Headless check job raw log",
+      "image": "27-job-raw.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":job raw 118532626250"
+    },
+    {
+      "id": "28-terminal",
+      "title": "Project terminal running the real parser checks",
+      "image": "28-terminal.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":go 2"
+    },
+    {
+      "id": "33-fleet-slots",
+      "title": "Scheduler slots",
+      "image": "33-fleet-slots.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":slots"
+    },
+    {
+      "id": "34-command-catalog",
+      "title": "Command catalog",
+      "image": "34-command-catalog.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":help commands"
+    },
+    {
+      "id": "35-options",
+      "title": "Lua options",
+      "image": "35-options.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":set"
+    },
+    {
+      "id": "36-skills",
+      "title": "Available skills",
+      "image": "36-skills.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":skills"
+    },
+    {
+      "id": "37-search",
+      "title": "Filtering the branch dashboard",
+      "image": "37-search.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":branches; type parser"
+    },
+    {
+      "id": "39-tasks-active",
+      "title": "Tasks \u2014 Active",
+      "image": "39-tasks-active.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":tasks active"
+    },
+    {
+      "id": "39-tasks-all",
+      "title": "Tasks \u2014 All",
+      "image": "39-tasks-all.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":tasks all"
+    },
+    {
+      "id": "39-tasks-merged",
+      "title": "Tasks \u2014 Merged",
+      "image": "39-tasks-merged.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":tasks merged"
+    },
+    {
+      "id": "39-tasks-open",
+      "title": "Tasks \u2014 Open",
+      "image": "39-tasks-open.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":tasks open"
+    },
+    {
+      "id": "39-tasks-ready",
+      "title": "Tasks \u2014 Ready",
+      "image": "39-tasks-ready.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":tasks ready"
+    },
+    {
+      "id": "39-tasks-stopped",
+      "title": "Tasks \u2014 Stopped",
+      "image": "39-tasks-stopped.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":tasks stopped"
+    },
+    {
+      "id": "40-launch",
+      "title": "Agent launch commands",
+      "image": "40-launch.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":launch"
+    },
+    {
+      "id": "41-queue-help",
+      "title": "Work queue help",
+      "image": "41-queue-help.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":queue help"
+    },
+    {
+      "id": "42-job-help",
+      "title": "Headless job help",
+      "image": "42-job-help.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":job help"
+    },
+    {
+      "id": "43-attention-help",
+      "title": "Idle delivery help",
+      "image": "43-attention-help.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":attention help"
+    },
+    {
+      "id": "44-attention-recovery",
+      "title": "Delivery journal recovery report",
+      "image": "44-attention-recovery.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":attention recover"
+    },
+    {
+      "id": "45-supervisor-rules",
+      "title": "Supervisor rules (empty demo)",
+      "image": "45-supervisor-rules.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":supervisor rules"
+    },
+    {
+      "id": "46-api-cost",
+      "title": "API cost estimate from the private demo",
+      "image": "46-api-cost.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":api-cost status"
+    },
+    {
+      "id": "47-api-cost-models",
+      "title": "API cost model details",
+      "image": "47-api-cost-models.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":api-cost models"
+    },
+    {
+      "id": "48-uninstall-preview",
+      "title": "Local extension removal preview",
+      "image": "48-uninstall-preview.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":uninstall /workspace/example-skill --agents codex --dry-run"
+    },
+    {
+      "id": "50-jobs",
+      "title": "Completed headless jobs",
+      "image": "50-jobs.png",
+      "columns": 160,
+      "rows": 38,
+      "pixel_width": 3940,
+      "pixel_height": 2098,
+      "entrypoint": ":jobs"
+    }
+  ],
+  "builds": [
+    {
+      "sha256": "a7382aecde7cd1a656528ff9c0c0318e2c39036c5269fae9e9520b744df3a27b",
+      "description": "Ask-free public release with bundled Tasks"
+    },
+    {
+      "sha256": "391842d17d0653a961186f4eeda586a4b25601c88de38d21953116c7e38ec44c",
+      "description": "Public release with validated Markdown provider consumer"
+    }
+  ]
 }

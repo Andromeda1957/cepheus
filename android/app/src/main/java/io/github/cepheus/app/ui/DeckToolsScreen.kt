@@ -32,7 +32,6 @@ import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.KeyboardHide
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.PowerSettingsNew
-import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.Terminal
@@ -85,7 +84,6 @@ private val toolPages = listOf(
     ToolPage("Jobs", "Headless commands, output and exit status", Icons.Outlined.PlayArrow),
     ToolPage("Scheduler", "Capacity, waiting work and provider holds", Icons.Outlined.Tune),
     ToolPage("Branches", "Worktrees, ahead and behind, and their agents", Icons.Outlined.AccountTree),
-    ToolPage("Ask", "Quick questions and saved answers", Icons.Outlined.QuestionAnswer),
     ToolPage("Broadcast", "Send one message to several agents", Icons.Outlined.Campaign),
     ToolPage("Terminals", "Open a shell on any machine", Icons.Outlined.Terminal),
     ToolPage("Scans", "Start security scans and read their reports", Icons.Outlined.Security),
@@ -214,7 +212,6 @@ fun DeckToolsScreen(snackbar: SnackbarHostState, onBack: () -> Unit, onSession: 
                                 when (shown) {
                                     "Scheduler" -> SchedulerScreen(online, capabilities?.contains("fleet"))
                                     "Branches" -> BranchTools(online, snackbar, onSession)
-                                    "Ask" -> AskTools(online)
                                     "Broadcast" -> BroadcastTools(online)
                                     "Terminals" -> TerminalTools(online, onTerminal)
                                     "Scans" -> ScanTools(online, onSession)
@@ -562,47 +559,6 @@ private fun BranchTools(online: Boolean, snackbar: SnackbarHostState, onSession:
             onDismiss = { branch = null }, onStarted = { branch = null; onSession(it) }, onResume = { branch = null },
             snackbar = snackbar, host = StartHost(chosen.string("host").ifEmpty { null }, chosen.string("host_label")), cwd = chosen.string("path"),
         )
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun AskTools(online: Boolean) {
-    var text by rememberSaveable { mutableStateOf("") }
-    var route by rememberSaveable { mutableStateOf("") }
-    val request = rememberToolRequest()
-    val history = rememberToolRequest()
-    LaunchedEffect(online) { if (online) history.run("ask_history") }
-    Caption("Ask without opening a session. Auto sends code questions to the code agent and the rest to web search.")
-    val routes = listOf("" to "Auto", "/web" to "Web search", "/code" to "Code agent", "/claude" to "Claude", "/codex" to "Codex", "/gemini" to "Gemini", "/agy" to "Antigravity")
-    ToolPicker("Answer with", routes.first { it.first == route }.second, routes, enabled = !request.busy) { route = it }
-    ToolField(text, { text = it.take(4000) }, "Question", multiline = true)
-    PrimaryButton("Ask", online && text.isNotBlank(), busy = request.busy) {
-        request.run("ask", JSONObject().put("text", listOf(route, text.trim()).filter { it.isNotEmpty() }.joinToString(" "))) {
-            history.run("ask_history", keep = true)
-        }
-    }
-    RequestStatus(request)
-    request.data?.let { answer ->
-        ToolCard {
-            Text(answer.string("question"), style = MaterialTheme.typography.titleSmall)
-            Caption(answer.string("who"))
-            Output(answer.string("answer"))
-            answer.string("history_warning").takeIf { it.isNotBlank() }?.let { ErrorLine(it) }
-        }
-    }
-    SectionTitle("History") {
-        RefreshButton("Refresh history", online, history.busy) { history.run("ask_history", keep = true) }
-    }
-    RequestStatus(history)
-    val entries = history.data?.objects("items").orEmpty()
-    if (history.data != null && entries.isEmpty()) Caption("No questions yet.")
-    for (entry in entries.asReversed()) ToolCard {
-        Text(entry.string("question"), style = MaterialTheme.typography.titleSmall)
-        Caption(entry.string("who"), deck.textTertiary)
-        Output(entry.string("answer"))
-        if (entry.optBoolean("error")) ErrorLine(entry.string("answer").ifBlank { "This question failed." })
-        (entry.opt("error") as? String)?.takeIf { it.isNotBlank() }?.let { ErrorLine(it) }
     }
 }
 

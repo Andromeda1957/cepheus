@@ -99,28 +99,13 @@ pub fn render(f: &mut Frame, app: &mut App) -> Option<(u16, u16, u8)> {
         }
     }
     footer_view(f, footer, app, &t);
-    if app.dialog.is_some() {
-        overlays::prepare_ask(app, area);
-    }
     if let Some(dialog) = &app.dialog {
         scrim(f, main, &t);
         let mut viewport = app.dialog_viewport.clone();
         viewport.begin(dialog);
-        // The quick-question box shows the terminal's own cursor.
-        let cursor = match dialog {
-            Dialog::Ask { draft, route, scroll } => {
-                overlays::ask_view(f, area, draft, *route, *scroll, app, &t, &mut viewport)
-            }
-            _ => {
-                dialog_view(f, area, dialog, app, &t, &mut viewport);
-                None
-            }
-        };
+        dialog_view(f, area, dialog, app, &t, &mut viewport);
         app.dialog_viewport = viewport;
-        if let Some((x, y, _)) = cursor {
-            f.set_cursor_position((x, y));
-        }
-        return cursor;
+        return None;
     }
     app.dialog_viewport = DialogViewport::default();
     if let Some((x, y, _)) = cursor {
@@ -1299,9 +1284,6 @@ fn dialog_view(f: &mut Frame, area: Rect, dialog: &Dialog, app: &App, t: &Theme,
             dialogs::broadcast_view(f, area, text, targets, *sel, app, t, viewport)
         }
         Dialog::Branches { sel, filter } => overlays::branches_view(f, area, *sel, filter, app, t, viewport),
-        Dialog::Ask { draft, route, scroll } => {
-            overlays::ask_view(f, area, draft, *route, *scroll, app, t, viewport);
-        }
         Dialog::Scans { sel } => overlays::scans_view(f, area, *sel, app, t, viewport),
         Dialog::Report { title, lines, scroll, confirm, waiting } => {
             overlays::report_view(f, area, title, lines, *scroll, confirm.is_some(), *waiting, app, t, viewport)
@@ -1578,7 +1560,3 @@ fn around_cursor(before: &str, after: &str, width: usize) -> (String, String) {
 #[cfg(test)]
 #[path = "tests/view.rs"]
 mod tests;
-
-#[cfg(test)]
-#[path = "tests/screenshots.rs"]
-mod screenshots;

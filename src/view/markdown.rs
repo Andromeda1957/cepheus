@@ -1,5 +1,5 @@
 //! Markdown rendered to styled lines that are wrapped later at the width
-//! they are drawn: Dot's replies and quick-question answers.
+//! they are drawn: Dot's replies.
 use super::*;
 use pulldown_cmark::{Event, Options, Parser, Tag, TagEnd};
 

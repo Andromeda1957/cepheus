@@ -1,6 +1,6 @@
 //! Text being typed into a box: a cursor that moves by character, word and line, deleting the same ways,
 //! pasting at the cursor, and stepping back through earlier entries as a shell's history does. First used by
-//! the quick-question box.
+//! other text composers.
 
 /// The text, the cursor's byte offset in it (always between characters),
 /// and the earlier entry being shown with the text typed before browsing.

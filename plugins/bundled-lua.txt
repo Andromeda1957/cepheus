@@ -1,2 +1,3 @@
 # id|context|source
 unmerged-branches|ui|lua/unmerged_branches.lua
+tasks|ui|lua/tasks.lua

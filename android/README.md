@@ -11,7 +11,7 @@ The app includes:
 - Native chat with Markdown, tool details, images, skills, model controls and
   question cards; saved drafts and offline conversation history.
 - Saved connections, appearance and notification settings, Stats and Errors.
-- Deck tools for Branches, Ask, Broadcast, Terminals, Scans, Extensions,
+- Deck tools for Branches, Broadcast, Terminals, Scans, Extensions,
   Scripting, Service, Scheduler, Jobs and Queue.
 - Light, dark and system themes, background delivery and notification replies.
 

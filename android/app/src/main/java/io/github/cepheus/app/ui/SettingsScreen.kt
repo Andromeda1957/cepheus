@@ -127,7 +127,7 @@ fun SettingsScreen(snackbar: SnackbarHostState, onBack: () -> Unit, onStats: () 
             Section("Deck") {
                 Pref(
                     title = "Deck tools",
-                    summary = "Branches, Ask, Broadcast, Terminals, Scans, Extensions, Scripting and Service",
+                    summary = "Branches, Broadcast, Terminals, Scans, Extensions, Scripting and Service",
                     icon = Icons.Outlined.Computer,
                     opens = true,
                     onClick = onTools,

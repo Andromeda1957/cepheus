@@ -38,16 +38,6 @@ const WINDOW_OWN_KEYS: &[(&str, &[(&str, &str)])] = &[
     ("Errors", &[("c", "clears them")]),
     ("Branches", &[("Ctrl-n", "Claude"), ("Ctrl-x", "Codex"), ("Ctrl-t", "a terminal, on the branch")]),
     (
-        "Ask",
-        &[
-            ("Tab", "who answers"),
-            ("↑ ↓", "earlier questions"),
-            ("Ctrl-y", "copies the answer"),
-            ("Ctrl-c", "stops it"),
-            ("Ctrl-l", "clears them"),
-        ],
-    ),
-    (
         "Message sessions",
         &[
             ("Enter", "sends"),

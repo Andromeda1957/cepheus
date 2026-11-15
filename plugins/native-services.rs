@@ -38,8 +38,6 @@ impl State {
 
 #[path = "agent-extensions/service_commands.rs"]
 mod agent_extensions;
-#[path = "quick-ask/service_commands.rs"]
-mod ask;
 #[path = "api-cost/service.rs"]
 mod cost;
 #[path = "dev-services/service_commands.rs"]
@@ -71,7 +69,6 @@ pub(super) fn start(
         || provider_target::start(service, client, request, plugin, command, args)
         || provider_controls::start(service, client, request, plugin, command, args)
         || peers::start(service, client, request, plugin, command, args)
-        || ask::start(service, client, request, plugin, command, args)
         || agent_extensions::start(service, client, request, plugin, command, args)
         || cost::start(service, client, request, plugin, command, args)
 }

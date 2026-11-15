@@ -81,8 +81,7 @@ impl Queue {
                     .take(262145)
                     .read_to_end(&mut bytes)?;
                 anyhow::ensure!(bytes.len() <= 262144, "source output too large");
-                let value: serde_json::Value = serde_json::from_slice(&bytes)?;
-                Ok(serde_json::from_value(value.get("tasks").context("source tasks missing")?.clone())?)
+                Ok(serde_json::from_slice(&bytes)?)
             })();
             let next_sequence = source.sequence.checked_add(1).context("source sequence exhausted")?;
             let tasks = result.ok();

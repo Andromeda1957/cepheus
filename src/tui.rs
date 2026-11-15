@@ -64,7 +64,7 @@ mod scroll;
 mod session_scroll;
 pub mod work_queue;
 
-pub use commands::{choose_matches, choose_snap, AskRendered, BranchRow, Completion};
+pub use commands::{choose_matches, choose_snap, BranchRow, Completion};
 pub use navigation::DialogViewport;
 
 // Snapshots remain inline to preserve the existing native API.
@@ -86,13 +86,6 @@ pub enum AppEv {
     Error(String),
     /// A script's job finished (`lua.rs`).
     Lua(crate::lua::JobDone),
-    /// A quick question's answer (`ask.rs`).
-    Answered(crate::ask::Asked),
-    /// The answer so far, and the tool its program is using, as it streams.
-    AskProgress {
-        text: String,
-        activity: Option<String>,
-    },
 }
 
 /// Opens a connection to the service; tests pass their own.
@@ -261,13 +254,6 @@ pub enum Dialog {
     Branches {
         sel: usize,
         filter: String,
-    },
-    /// Quick questions (F4): the question typed, who answers it (none: the
-    /// deck decides) and how far up the answers are scrolled.
-    Ask {
-        draft: crate::edit::Draft,
-        route: Option<crate::ask::Route>,
-        scroll: usize,
     },
     /// The security scans (`:scans`).
     Scans {
@@ -508,24 +494,8 @@ pub struct App {
     command_history: command_history::CommandHistory,
     /// Where the keys were before the scratch terminal (:scratch) took them.
     scratch_back: Option<Sel>,
-    /// The question being answered, as it streams in.
-    pub asking: Option<commands::Asking>,
-    /// Questions asked while another is answered, each with the route Tab
-    /// chose for it, asked in turn.
-    pub ask_queue: std::collections::VecDeque<(String, Option<crate::ask::Route>)>,
-    /// The conversation a follow-up continues; `/clear` ends it.
-    pub ask_thread: Option<crate::ask::Thread>,
-    /// Questions asked and their answers, oldest first, and the folder that
-    /// keeps them (none in tests that do not ask, so no test writes the
-    /// owner's); read when F4 first opens.
-    pub ask_history: Vec<crate::ask::Asked>,
-    pub ask_dir: Option<PathBuf>,
-    /// Counts changes to the history, and the answers drawn for the last.
-    pub ask_generation: u64,
-    pub ask_rendered: Option<commands::AskRendered>,
     /// An explicit Lua navigation request, including reselecting the current session.
     pub script_selection: Option<u64>,
-    ask_loaded: bool,
     /// The scripts (`lua.rs`), and where they load from (none: Lua is off,
     /// as in tests that do not ask).
     pub lua: Option<crate::lua::Engine>,
@@ -641,7 +611,6 @@ fn run_inner() -> Result<Option<String>> {
     app.config_stamp = config_stamp;
     app.coordinator_stamp = coordinator_stamp;
     app.coordinator_target = coordinator_target;
-    app.ask_dir = Some(paths::state_dir());
     app.command_history = command_history::CommandHistory::load(paths::command_history_file());
     app.use_attention_store(paths::state_dir().join("attention-desktop"));
     if app.cfg.lua {
@@ -746,15 +715,7 @@ impl App {
             completion: None,
             command_history: Default::default(),
             scratch_back: None,
-            asking: None,
-            ask_queue: Default::default(),
-            ask_thread: None,
-            ask_history: Vec::new(),
-            ask_dir: None,
-            ask_generation: 0,
-            ask_rendered: None,
             script_selection: None,
-            ask_loaded: false,
             lua: None,
             lua_setup: None,
             lua_waiting: false,
@@ -1274,11 +1235,8 @@ impl App {
             }
             // Dot shows no spinner (it is always on), so it needs no frames;
             // kitty animates its pet by itself.
-            // An answer being written shows its spinner and seconds.
-            let asking = self.asking.is_some() && matches!(self.dialog, Some(Dialog::Ask { .. }));
             let animate = self.state.sessions.iter().any(|s| s.status == Status::Working && !self.is_cloud(s))
-                || self.notice.is_some()
-                || asking;
+                || self.notice.is_some();
             let mut timeout = if animate { Duration::from_millis(120) } else { RESOURCE_INTERVAL };
             if matches!(self.current, Some(Sel::Job(_))) {
                 timeout = timeout.min(Duration::from_secs(1));
@@ -1426,8 +1384,6 @@ impl App {
             }
             AppEv::Error(text) => self.local_error(text),
             AppEv::Lua(done) => self.lua_job_done(done),
-            AppEv::Answered(asked) => self.answered(asked),
-            AppEv::AskProgress { text, activity } => self.ask_progress(text, activity),
         }
     }
 
@@ -1939,8 +1895,6 @@ impl App {
                     Self::picker_filter_changed(dialog);
                 } else if let Some(Dialog::Broadcast { text: message, .. }) = &mut self.dialog {
                     message.push_str(&text.replace("\r\n", "\n").replace('\r', "\n"));
-                } else if let Some(Dialog::Ask { draft, .. }) = &mut self.dialog {
-                    draft.insert(&text);
                 } else if self.dialog.is_none() && self.mode == Mode::Command {
                     self.command.insert(&util::one_line(&text));
                     self.command_history_edited();
@@ -2244,7 +2198,6 @@ impl App {
             Hotkey::MoveDown => self.move_session(1),
             Hotkey::Window => self.focus_list(),
             Hotkey::Branches => self.open_branches(),
-            Hotkey::Ask => self.open_ask(""),
             Hotkey::MemoryRerun => self.run_command("rerun"),
             Hotkey::Scratch => self.toggle_scratch(),
             Hotkey::Command => self.open_command_line(),
@@ -2527,7 +2480,6 @@ impl App {
                 }
             }
             dialog @ (Dialog::Branches { .. }
-            | Dialog::Ask { .. }
             | Dialog::Scans { .. }
             | Dialog::Report { .. }
             | Dialog::Choose { .. }) => {

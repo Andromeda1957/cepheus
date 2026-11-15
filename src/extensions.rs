@@ -254,8 +254,6 @@ pub mod desktop_commands;
 pub mod dev_services_commands;
 #[path = "../plugins/launch-settings/commands.rs"]
 pub mod launch_settings_commands;
-#[path = "../plugins/quick-ask/commands.rs"]
-pub mod quick_ask_commands;
 #[path = "../plugins/security-scans/commands.rs"]
 pub mod security_scans_commands;
 

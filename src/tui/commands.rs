@@ -1,15 +1,12 @@
 //! The `:` commands (`actions.rs` names them) and the overlays they open: every branch on every host (F3),
-//! quick questions (F4), the security scans, install reports and scripts' pickers.
+//! the security scans, install reports and scripts' pickers.
 
 use std::path::{Path, PathBuf};
-use std::thread;
-use std::time::Instant;
 
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
-use super::{App, AppEv, Dialog, Mode, Sel};
+use super::{App, Dialog, Mode, Sel};
 use crate::actions;
-use crate::ask;
 use crate::hotkeys::Hotkey;
 use crate::lua::{ItemKind, PickItem};
 use crate::protocol::{BranchInfo, ClientMsg, InstallRequest, ServerMsg, SessionInfo, Status, Tool};
@@ -62,9 +59,7 @@ mod agent_extensions;
 mod dev_services;
 #[path = "../../plugins/launch-settings/ui.rs"]
 mod launch_settings;
-#[path = "../../plugins/quick-ask/ui.rs"]
-mod quick_ask;
-pub use quick_ask::{AskRendered, Asking};
+
 #[path = "../../plugins/security-scans/ui.rs"]
 mod security_scans;
 
@@ -185,10 +180,6 @@ impl App {
             }
             "lua" => {
                 self.lua_eval(rest);
-                Ok(())
-            }
-            "ask" => {
-                self.open_ask(rest);
                 Ok(())
             }
             "broadcast" if rest.is_empty() => {
@@ -857,7 +848,6 @@ impl App {
                 }
                 Some(Dialog::Branches { sel, filter })
             }
-            Dialog::Ask { draft, route, scroll } => self.ask_key(draft, route, scroll, k),
             Dialog::Scans { mut sel } => {
                 let count = self.state.scans.len();
                 match k.code {

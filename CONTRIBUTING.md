@@ -48,28 +48,36 @@ disposable-emulator requirements.
 
 ## Screenshots
 
-The [gallery](docs/screenshots/README.md) documents each distinct desktop and
-Android screen with neutral fixture content.
+The [gallery](docs/screenshots/README.md) documents the running desktop TUI and
+Android app using disposable demo data.
 
-Desktop captures export the production ratatui renderer's ANSI output through
-an ignored documentation entrypoint. Foot draws the terminal, and grim captures
-its native pixels. They do not connect to a running service or read real
-conversations. Install Foot, grim with toplevel capture support, and JetBrainsMono
-Nerd Font on a Hyprland Wayland session:
+Desktop images are native Foot window captures of the live TUI, including its
+real provider client. Run the demo service and clients in an isolated container
+with a private PID namespace and home, so discovery cannot include your existing
+sessions. Use a small neutral Git repository and real task sources. Do not draw
+or replay an invented provider conversation.
+
+Start a dedicated tmux server with a private socket and attach its pane to the
+container's TUI. Install Foot, tmux, grim with toplevel capture support, and
+JetBrainsMono Nerd Font on a Hyprland Wayland session. Capture the selected pane:
 
 ```sh
-python3 tools/capture_screenshots.py
+python3 tools/capture_screenshots.py --live /path/to/private/tmux.sock \
+  --target capture:0.0 --capture /path/to/captures/01-workspace.png \
+  --columns 160 --rows 38
 ```
 
-Use an empty, inactive capture workspace (10 by default). The capture command
-keeps that workspace hidden and closes its own terminal windows afterward.
+The capture tool attaches only to the supplied socket; it does not start an
+agent or read credentials. Use an empty, inactive capture workspace (10 by
+default). The command keeps that workspace hidden and closes its own terminal
+window afterward. Open each overlay in the live application before capturing it.
 
-To keep compilation on a separate build machine, export the ANSI buffers
-there, copy the output directory, then capture them locally:
+Prepare a schema 1 `manifest.json` alongside the images, with a `screens` list
+containing an `id`, `title`, and PNG basename in `image` for each view. Import a
+reviewed batch to update the images and gallery:
 
 ```sh
-CEPHEUS_SCREENSHOTS_DIR=/path/to/captures cargo test --release --locked --bin cepheus view::screenshots::capture_all_screens -- --ignored --exact --nocapture
-python3 tools/capture_screenshots.py --render-only /path/to/captures
+python3 tools/capture_screenshots.py --desktop /path/to/captures
 ```
 
 Android captures run the real debug APK against isolated synthetic gateway

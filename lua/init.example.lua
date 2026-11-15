@@ -13,8 +13,8 @@ deck.opt.sidebar = { "title", "resources", "dev", "usage", "sessions" }
 -- Keys: a command line, or a function.
 deck.keymap("alt+c", "new claude", { desc = "new Claude Code session here" })
 deck.keymap("alt+g", function()
-  deck.cmd("ask /web " .. os.date("what happened in tech news on %Y-%m-%d?"))
-end, { desc = "today's tech news" })
+  deck.cmd("branches")
+end, { desc = "branches and agents" })
 
 -- A command of your own: :fleet starts a Codex session on every online host.
 deck.command("fleet", function(args)

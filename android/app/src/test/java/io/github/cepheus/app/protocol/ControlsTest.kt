@@ -47,12 +47,12 @@ class ControlsTest {
         }
     }
 
-    @Test fun successfulAskBooleanDoesNotBecomeAStringError() {
+    @Test fun successfulControlBooleanDoesNotBecomeAStringError() {
         val data = JSONObject().put("error", false).put("answer", "Here is the answer")
-        assertEquals("Here is the answer", Controls.data("ask", ServerMessage.Control(1, "ask", data)).getString("answer"))
+        assertEquals("Here is the answer", Controls.data("plugin", ServerMessage.Control(1, "plugin", data)).getString("answer"))
         try {
-            Controls.data("ask", ServerMessage.Control(1, "ask", JSONObject().put("error", true).put("answer", "provider unavailable")))
-            fail("Failed ask accepted")
+            Controls.data("plugin", ServerMessage.Control(1, "plugin", JSONObject().put("error", true).put("answer", "provider unavailable")))
+            fail("Failed control accepted")
         } catch (e: IllegalArgumentException) { assertEquals("provider unavailable", e.message) }
     }
 

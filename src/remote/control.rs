@@ -1,8 +1,8 @@
 //! Authenticated phone access to desktop operations. Slow work uses private
 //! service connections, so late replies cannot answer another phone's request.
 use super::*;
+use crate::gitwt;
 use crate::protocol::{InstallRequest, MAX_NAME};
-use crate::{ask, gitwt};
 use serde::Deserialize;
 use std::fs;
 use std::io::Read;
@@ -16,8 +16,6 @@ const CAPABILITIES: &[&str] = &[
     "overview",
     "fleet",
     "branches",
-    "ask",
-    "ask_history",
     "broadcast",
     "terminal",
     "terminal_screen",
@@ -55,10 +53,7 @@ enum Action {
     },
     Overview {},
     Branches {},
-    Ask {
-        text: String,
-    },
-    AskHistory {},
+
     Broadcast {
         ids: Vec<u64>,
         text: String,
@@ -574,44 +569,6 @@ impl Hub {
                     }
                 }
                 Ok(json!({"items":items,"hosts":hosts}))
-            }
-            Action::Ask { text } => {
-                valid_text(&text, ask::MAX_QUESTION * 4)?;
-                if text.chars().count() > ask::MAX_QUESTION {
-                    bail!("the quick question is too long");
-                }
-                if self.links.is_shared() {
-                    return match exchange(
-                        &self.opts.socket,
-                        &ClientMsg::Plugin {
-                            request: 1,
-                            plugin: "quick-ask".into(),
-                            command: "ask".into(),
-                            args: json!({"text":text}),
-                        },
-                        CONTROL_LIMIT,
-                        |message| matches!(message, ServerMsg::PluginResult { request: 1, .. }),
-                    )? {
-                        ServerMsg::PluginResult { data, error: None, .. } => Ok(data),
-                        ServerMsg::PluginResult { error: Some(error), .. } => bail!("{error}"),
-                        _ => bail!("Unexpected quick question reply"),
-                    };
-                }
-                let config = self.control_config()?;
-                let start = self.control_state()?.0.start_dir;
-                let state_dir = self.opts.dir.parent().context("no gateway state folder")?;
-                let asked = ask::ask_once(&config, &text, Path::new(&start), state_dir)?;
-                let _serial = lock(&self.control_history_lock);
-                let mut data = serde_json::to_value(&asked)?;
-                if let Err(error) = ask::append_history(state_dir, &asked) {
-                    data["history_warning"] = json!(format!("Answer shown, but history could not be saved: {error:#}"));
-                }
-                Ok(data)
-            }
-            Action::AskHistory {} => {
-                let _serial = lock(&self.control_history_lock);
-                let state_dir = self.opts.dir.parent().context("no gateway state folder")?;
-                Ok(json!({"items":ask::load_history(state_dir)}))
             }
             Action::Broadcast { ids, text } => {
                 valid_text(&text, SEND_MAX)?;

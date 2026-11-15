@@ -15,12 +15,13 @@ fn engine(dir: &TempDir) -> (Engine, Receiver<JobDone>) {
     (Engine::new(places, sink).expect("Lua starts"), rx)
 }
 
-/// An engine with `init` as its init.lua, loaded.
+/// An engine with `init` as its init.lua, isolating generic Lua tests from
+/// the bundled task-source dashboard.
 fn loaded(name: &str, init: &str) -> (TempDir, Engine, Receiver<JobDone>) {
     let dir = TempDir::new(name);
     dir.write("config/init.lua", init);
     let (mut e, rx) = engine(&dir);
-    e.load();
+    e.load_with(&BTreeMap::from([("tasks".into(), false)]));
     (dir, e, rx)
 }
 
@@ -135,7 +136,7 @@ fn shipped_cost_plugin_uses_a_pinned_row_and_remembers_being_disabled() {
     assert!(e.run_command("api-cost", &["off".into()]));
     assert!(e.sections().is_empty());
     let (mut again, _rx) = engine(&dir);
-    again.load();
+    again.load_with(&BTreeMap::from([("tasks".into(), false)]));
     assert!(again.take_errors().is_empty());
     assert!(again.sections().is_empty(), "the next view remembers the setting");
 }
@@ -348,10 +349,10 @@ fn a_failing_plugin_leaves_the_others_loaded() {
     dir.write("config/plugins/notes.txt", "deck.command('never', function() end)");
     let (mut e, _rx) = engine(&dir);
     e.load();
-    assert_eq!(e.loaded, ["init.lua", "b.lua", "unmerged-branches"]);
+    assert_eq!(e.loaded, ["init.lua", "b.lua", "unmerged-branches", "tasks"]);
     let errors = e.take_errors();
     assert!(errors.len() == 1 && errors[0].starts_with("Lua a.lua: ") && errors[0].contains("boom"), "{errors:?}");
-    assert_eq!(e.commands().iter().map(|c| c.name.as_str()).collect::<Vec<_>>(), ["fine"]);
+    assert_eq!(e.commands().iter().map(|c| c.name.as_str()).collect::<Vec<_>>(), ["fine", "tasks"]);
 }
 
 #[test]
@@ -667,11 +668,59 @@ fn a_json_null_reaches_scripts_as_nil() {
 
 #[test]
 fn the_example_init_lua_loads_cleanly() {
-    let (_dir, mut e, _rx) = loaded("lua-example", EXAMPLE_INIT);
+    let dir = TempDir::new("lua-example");
+    dir.write("config/init.lua", EXAMPLE_INIT);
+    let (mut e, _rx) = engine(&dir);
+    e.load();
     assert_eq!(e.take_errors(), Vec::<String>::new());
-    assert_eq!(e.loaded, ["init.lua", "unmerged-branches"]);
+    assert_eq!(e.loaded, ["init.lua", "unmerged-branches", "tasks"]);
     assert!(e.commands().iter().any(|c| c.name == "fleet"));
+    assert!(e.commands().iter().any(|c| c.name == "tasks"));
     assert!(e.sections().iter().any(|s| s.id == "load"));
+
+    dir.write("start/TASKS.md", "- [ ] Review parser diagnostics\n- [x] Add project overview\n");
+    let source = "task-sources:demo:markdown:tasks";
+    let tasks = crate::task_source::markdown_tasks(&dir.path().join("start"), source, "TASKS.md").unwrap();
+    let data = serde_json::json!({
+        "sources":[{"id":source,"owner":"task-sources","repository":"demo","fresh":true,"updated_at":1}],
+        "tasks":tasks,
+    });
+    e.set_state(serde_json::json!({"work_queue_capable":true,"work_queue":data,"sessions":[]}));
+    e.emit_json("state", &serde_json::Value::Null);
+    assert!(e.run_command("tasks", &["queue".into(), "all".into()]));
+    let requests = e.take_requests();
+    let [Request::Fleet { action, callback, .. }] = requests.as_slice() else { panic!("{requests:?}") };
+    assert_eq!(action, "source-list");
+    e.service_result(*callback, &data, None);
+    let requests = e.take_requests();
+    let [Request::Pick { pick, callback }] = requests.as_slice() else { panic!("{requests:?}") };
+    assert_eq!(pick.title, "Tasks");
+    assert_eq!(pick.tabs[pick.tab].label, "All");
+    assert_eq!(pick.tabs.iter().find(|t| t.label == "Ready").unwrap().count, "1");
+    assert_eq!(pick.tabs.iter().find(|t| t.label == "Stopped").unwrap().count, "1");
+    assert_eq!(pick.tabs.iter().find(|t| t.label == "Merged").unwrap().count, "0");
+    let selected = pick.items.iter().position(|item| item.plain().contains("Review parser diagnostics")).unwrap();
+    assert!(pick.items.iter().any(|item| item.plain().contains("Add project overview")));
+    e.choose(*callback, Some((selected, &pick.items[selected].plain())), None);
+    let requests = e.take_requests();
+    let [Request::Command(line)] = requests.as_slice() else { panic!("{requests:?}") };
+    assert_eq!(
+        crate::actions::words(line).unwrap(),
+        ["queue", "source", source, &tasks[0].id],
+        "the picker hands opaque source/task identities to the native command"
+    );
+    let (mut app, rx) = crate::tui::tests::app_with(Vec::new(), Vec::new());
+    app.state.work_queue_capable = true;
+    let _ = rx.try_iter().collect::<Vec<_>>();
+    app.run_command(line);
+    assert_eq!(app.mode, crate::tui::Mode::Command);
+    assert_eq!(
+        crate::actions::words(&app.command).unwrap(),
+        ["queue", "source", source, &tasks[0].id, "--title", "New task job", "--"],
+        "the App opens the explicit-spec draft without executing task text"
+    );
+    assert!(rx.try_recv().is_err(), "opening the spec must not submit or execute work");
+    assert!(e.take_errors().is_empty());
 }
 
 /// What the dynamic loader of a host asks its C library for when it starts
@@ -923,6 +972,7 @@ fn repository_plugins_use_catalog_sources_and_modules_without_home_fallback() {
     );
     dir.write("sources/plugins/bundled-lua.txt", include_str!("../../plugins/bundled-lua.txt"));
     dir.write("sources/lua/unmerged_branches.lua", "return false");
+    dir.write("sources/lua/tasks.lua", "return false");
     dir.write("sources/lua/helper.lua", "return 42");
     dir.write(
         "sources/plugins/example.lua",

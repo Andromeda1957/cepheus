@@ -121,8 +121,6 @@ pub struct Config {
     /// Where Codex Security scans are kept, a folder per scan; the deck's
     /// data folder when unset.
     pub scans_dir: Option<PathBuf>,
-    /// The quick-question box (`ask.rs`).
-    pub ask: AskConfig,
     /// Load `init.lua` and the plugins beside the config file (`lua.rs`).
     pub lua: bool,
     /// Optional repository cepheus directory; personal settings remain beside config.json.
@@ -306,10 +304,6 @@ impl RefreshPolicy {
             && !self.excluded_hosts.iter().any(|name| name == host)
     }
 }
-
-#[path = "../plugins/quick-ask/config.rs"]
-mod quick_ask;
-pub use quick_ask::{AskConfig, AskRoute};
 
 /// The hosts file beside `config`: written by `cepheus hosts install` and `remove`, so nothing the deck writes
 /// touches the owner's own config file, as Neovim's plugin manager keeps its lock file apart from `init.lua`.
@@ -588,7 +582,6 @@ impl Default for Config {
             startup: crate::startup::Settings::default(),
             skills: true,
             scans_dir: None,
-            ask: AskConfig::default(),
             lua: true,
             plugin_source_dir: None,
             plugins: BTreeMap::new(),
@@ -722,7 +715,6 @@ impl Config {
                 && tags.insert(h.tag)
         });
         self.host_name = self.host_name.take().map(|n| n.trim().to_string()).filter(|n| !n.is_empty());
-        self.ask.timeout = self.ask.timeout.clamp(10, 1800);
         self.program_restart_check_secs = self.program_restart_check_secs.clamp(1, 3600);
         self.program_restart_grace_secs = self.program_restart_grace_secs.min(3600);
         self

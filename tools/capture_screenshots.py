@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Capture the real desktop renderer with synthetic examples and render PNGs.
+"""Capture a live, isolated Cepheus TUI as native terminal pixels.
 
-Requires Foot, Hyprland, grim with toplevel capture, and JetBrainsMono Nerd Font.
-Rust/Cargo is needed only to regenerate the production ANSI buffers. This does not
-connect to a running Cepheus service or read saved conversations.
+Requires Foot, tmux, Hyprland, grim toplevel capture, and JetBrainsMono Nerd Font.
+The caller provisions an isolated service and dedicated tmux server; this tool
+attaches only to the supplied socket and never launches an agent or reads auth.
 """
 from __future__ import annotations
 
@@ -42,7 +42,7 @@ def basename(value: object, suffix: str) -> str:
     return value
 
 
-def load(source: Path, *, ansi: bool = False) -> dict:
+def load(source: Path) -> dict:
     plain_path(source)
     manifest_path = source / "manifest.json"
     plain_path(manifest_path)
@@ -63,14 +63,10 @@ def load(source: Path, *, ansi: bool = False) -> dict:
         title = screen.get("title")
         if not isinstance(title, str) or not title or len(title) > 200 or any(ord(c) < 32 for c in title):
             raise ValueError("Every screenshot needs a short, single-line title")
-        path = source / basename(screen.get("ansi"), ".ansi") if ansi else source / name
+        path = source / name
         plain_path(path)
         if not path.exists() or not stat.S_ISREG(path.stat().st_mode):
             raise ValueError(f"Screenshot input is not a regular file: {path}")
-        if ansi and (path.stat().st_size > 8 << 20 or b"\x1b]" in path.read_bytes()):
-            raise ValueError("Expected a bounded terminal frame without OSC side effects")
-        if ansi and any(type(screen.get(key)) is not int or not 20 <= screen[key] <= 300 for key in ("columns", "rows")):
-            raise ValueError("Expected bounded terminal columns and rows")
     return manifest
 
 
@@ -98,8 +94,8 @@ def window_action(app_id: str, action: str) -> None:
     subprocess.run(["hyprctl", "eval", command], check=True, capture_output=True, text=True, timeout=10)
 
 
-def replay(ansi: Path, ready: Path, columns: int, rows: int) -> None:
-    """The Foot child: replay a production frame once its exact viewport fits."""
+def attach(socket: Path, target: str, ready: Path, columns: int, rows: int) -> None:
+    """Wait for the native viewport, then attach to the caller's live TUI."""
     tty.setraw(sys.stdin.fileno())
     os.write(sys.stdout.fileno(), b"\x1b[16t")
     response = b""
@@ -117,16 +113,11 @@ def replay(ansi: Path, ready: Path, columns: int, rows: int) -> None:
     while time.monotonic() < deadline:
         size = os.get_terminal_size()
         fits = (size.columns, size.lines) == (columns, rows)
-        if fits:
-            sys.stdout.buffer.write(ansi.read_bytes())
-            sys.stdout.buffer.flush()
-            time.sleep(0.25)
         ready.write_text(json.dumps({"ready": fits, "columns": size.columns, "rows": size.lines,
                                      "cell_width": width, "cell_height": height}))
         if fits:
-            # The parent owns this Foot process and closes it after screencopy.
-            select.select([sys.stdin], [], [], 90)
-            return
+            environment = dict(os.environ, COLORTERM="truecolor")
+            os.execvpe("tmux", ["tmux", "-S", str(socket), "attach-session", "-t", target], environment)
         time.sleep(0.1)
     raise RuntimeError("The terminal never reached the requested native viewport")
 
@@ -148,7 +139,7 @@ def terminal_config(manifest: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def native_capture(source: Path, screen: dict, destination: Path, config: Path, scratch: Path, workspace: int) -> tuple[int, int]:
+def _capture_live(socket: Path, target: str, screen: dict, destination: Path, config: Path, scratch: Path, workspace: int) -> tuple[int, int]:
     """Capture only our dedicated Foot surface, without displaying its workspace."""
     app_id = "cepheus-capture-" + uuid.uuid4().hex
     before = (hypr("activeworkspace")["id"], hypr("activewindow").get("address"))
@@ -159,7 +150,7 @@ def native_capture(source: Path, screen: dict, destination: Path, config: Path, 
     command = shlex.join([
         "foot", "--config", str(config), "--app-id", app_id, "--title", "Cepheus documentation capture",
         "--window-size-chars", f"{screen['columns']}x{screen['rows']}",
-        sys.executable, str(Path(__file__).resolve()), "_replay", str(source / screen["ansi"]), str(ready),
+        sys.executable, str(Path(__file__).resolve()), "_attach", str(socket), target, str(ready),
         str(screen["columns"]), str(screen["rows"]),
     ]) + " > /dev/null 2> " + shlex.quote(str(log))
     # Per-launch rules apply before the window maps and expire with this launch.
@@ -187,7 +178,7 @@ def native_capture(source: Path, screen: dict, destination: Path, config: Path, 
                 time.sleep(0.1)
                 continue
             if state["ready"]:
-                time.sleep(0.5)
+                time.sleep(1.5)
                 break
             grid = (state["columns"], state["rows"])
             if grid != last_grid and resize_count < 5:
@@ -227,25 +218,52 @@ def native_capture(source: Path, screen: dict, destination: Path, config: Path, 
                 raise RuntimeError("The owned capture terminal did not close")
 
 
-def render(source: Path, workspace: int = 10) -> None:
-    manifest = load(source, ansi=True)
-    destination = output_directory("desktop", manifest)
+def capture_live(socket: Path, target: str, destination: Path, terminal: dict,
+                 columns: int = 160, rows: int = 38, workspace: int = 10) -> tuple[int, int]:
+    """Capture a real TUI in a dedicated caller-owned tmux server."""
+    info = socket.stat()
+    if not stat.S_ISSOCK(info.st_mode) or info.st_uid != os.getuid():
+        raise ValueError("Expected a caller-owned tmux Unix socket")
+    if not re.fullmatch(r"[A-Za-z0-9_:-][A-Za-z0-9_.:-]{0,100}", target):
+        raise ValueError("Expected a bounded tmux target")
+    if not 20 <= columns <= 300 or not 20 <= rows <= 300:
+        raise ValueError("Expected bounded terminal columns and rows")
+    plain_path(destination)
+    basename(destination.name, ".png")
+    if destination.exists() and not destination.is_file():
+        raise ValueError("Expected a regular PNG destination")
+    destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="cepheus-terminal-") as temporary:
         scratch = Path(temporary)
         config = scratch / "foot.ini"
-        config.write_text(terminal_config(manifest))
-        for screen in manifest["screens"]:
-            dimensions = native_capture(source, screen, destination / screen["image"], config, scratch, workspace)
-            screen["pixel_width"], screen["pixel_height"] = dimensions
-            print(f"Captured {screen['id']}: {dimensions[0]} × {dimensions[1]} native Foot pixels", flush=True)
-    manifest["renderer"] = "production ratatui CrosstermBackend replayed in Foot; grim toplevel screencopy"
-    (destination / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    gallery = ["# Desktop screenshots", "", "Captured as native Foot terminal pixels from Cepheus's production ratatui renderer, using synthetic project data. No owner sessions, accounts or credentials appear. The pairing code is inert.", "", "The terminal uses JetBrainsMono Nerd Font at 12 pt and a near-black palette. The README workspace image uses a compact 120 × 34 viewport for readability; the full gallery uses 160 × 44. Bold text, dim text, ANSI colors, Nerd Font glyphs and terminal cell widths are drawn by Foot.", "", "Regenerate with `python3 tools/capture_screenshots.py`, or replay offloaded buffers with `python3 tools/capture_screenshots.py --render-only CAPTURE_DIRECTORY`. Capture uses an empty, inactive Hyprland workspace (10 by default) and requires Foot, grim with toplevel capture, and JetBrainsMono Nerd Font.", ""]
+        config.write_text(terminal_config({"terminal": terminal}))
+        return _capture_live(socket, target, {"columns": columns, "rows": rows}, destination,
+                             config, scratch, workspace)
+
+
+def desktop(source: Path) -> None:
+    manifest = load(source)
+    destination = output_directory("desktop", manifest)
+    old_manifest = destination / "manifest.json"
+    previous = load(destination)["screens"] if old_manifest.exists() else []
+    gallery = ["# Desktop screenshots", "",
+               "Captured from the running public Cepheus binary and a real Codex client in an isolated demo repository. Foot draws the native terminal pixels; these are live TUI captures, with no handwritten conversation or renderer replay.", "",
+               "The demo contains a small Git repository, a feature worktree, Markdown task sources, and a bounded coding task completed by Codex. Empty reports show facilities with no configured data. No owner sessions, project data, credentials, or private conversations appear.", "",
+               "The terminal uses a 160 × 38 viewport, JetBrainsMono Nerd Font at 12 pt, and a near-black palette. Capture requires Foot, tmux, Hyprland, and grim with toplevel capture. See CONTRIBUTING.md for the isolated live capture workflow.", ""]
     for screen in manifest["screens"]:
+        shutil.copyfile(source / screen["image"], destination / screen["image"])
         gallery.extend([f"## {screen['title']}", "", f"![{screen['title']}](desktop/{screen['image']})", ""])
+    (destination / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     (ROOT / "docs/screenshots/DESKTOP.md").write_text("\n".join(gallery))
+    retained = {screen["image"] for screen in manifest["screens"]}
+    for screen in previous:
+        if screen["image"] not in retained:
+            (destination / screen["image"]).unlink()
+    actual = {path.name for path in destination.glob("*.png")}
+    if actual != retained:
+        raise ValueError(f"Desktop PNG set differs from its manifest: {sorted(actual ^ retained)}")
     index()
-    print(f"Captured {len(manifest['screens'])} desktop screenshots in {destination}")
+    print(f"Imported {len(manifest['screens'])} live desktop captures in {destination}")
 
 
 def android(source: Path) -> None:
@@ -262,7 +280,7 @@ def android(source: Path) -> None:
 
 
 def index() -> None:
-    lines = ["# Screenshots", "", "These captures show Cepheus's real desktop renderer and Android APK using synthetic example data.", ""]
+    lines = ["# Screenshots", "", "These captures show the running Cepheus desktop TUI and Android APK with isolated example data.", ""]
     for label, folder, gallery in [("Desktop", "desktop", "DESKTOP.md"), ("Android", "android", "ANDROID.md")]:
         manifest = ROOT / "docs/screenshots" / folder / "manifest.json"
         plain_path(manifest)
@@ -277,27 +295,35 @@ def index() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--render-only", type=Path, help="capture previously exported ANSI buffers in a native Foot terminal")
-    parser.add_argument("--android", type=Path, help="import an Android capture directory and its manifest")
-    parser.add_argument("--workspace", type=int, default=10, help="empty inactive Hyprland workspace for native capture (default: 10)")
+    actions = parser.add_mutually_exclusive_group(required=True)
+    actions.add_argument("--live", type=Path, metavar="TMUX_SOCKET", help="capture a live TUI in a dedicated caller-owned tmux server")
+    actions.add_argument("--desktop", type=Path, help="import an actual desktop capture directory and its manifest")
+    actions.add_argument("--android", type=Path, help="import an Android capture directory and its manifest")
+    parser.add_argument("--target", default="capture:0.0", help="target pane in the private tmux server")
+    parser.add_argument("--capture", type=Path, help="PNG destination for a live capture")
+    parser.add_argument("--columns", type=int, default=160)
+    parser.add_argument("--rows", type=int, default=38)
+    parser.add_argument("--workspace", type=int, default=10, help="empty inactive Hyprland workspace for capture")
     args = parser.parse_args()
     if args.android:
         android(Path(os.path.abspath(args.android)))
         return
-    for required in ("foot", "grim", "hyprctl"):
+    if args.desktop:
+        desktop(Path(os.path.abspath(args.desktop)))
+        return
+    if args.capture is None:
+        parser.error("--live requires --capture OUTPUT.png")
+    for required in ("foot", "grim", "hyprctl", "tmux"):
         if not shutil.which(required):
             parser.error(f"{required} is required for native terminal capture")
-    if args.render_only:
-        render(Path(os.path.abspath(args.render_only)), args.workspace)
-        return
-    with tempfile.TemporaryDirectory(prefix="cepheus-screenshots-") as temporary:
-        env = dict(os.environ, CEPHEUS_SCREENSHOTS_DIR=temporary)
-        subprocess.run(["cargo", "test", "--release", "--locked", "view::screenshots::capture_all_screens", "--", "--ignored", "--exact", "--nocapture"], cwd=ROOT, env=env, check=True)
-        render(Path(temporary), args.workspace)
+    terminal = json.loads((ROOT / "docs/screenshots/desktop/manifest.json").read_text())["terminal"]
+    dimensions = capture_live(args.live, args.target, Path(os.path.abspath(args.capture)), terminal,
+                              args.columns, args.rows, args.workspace)
+    print(json.dumps({"image": args.capture.name, "pixel_width": dimensions[0], "pixel_height": dimensions[1]}))
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 6 and sys.argv[1] == "_replay":
-        replay(Path(sys.argv[2]), Path(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5]))
+    if len(sys.argv) == 7 and sys.argv[1] == "_attach":
+        attach(Path(sys.argv[2]), sys.argv[3], Path(sys.argv[4]), int(sys.argv[5]), int(sys.argv[6]))
     else:
         main()

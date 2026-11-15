@@ -27,7 +27,7 @@ pub fn payload_len(request: &HostReq) -> Result<u64> {
 /// Fixed coordinator-native defaults/history/stats never gain another hop.
 pub fn native_payload_len(request: &HostReq) -> Result<u64> {
     match request {
-        HostReq::PhoneModels | HostReq::PhoneStats | HostReq::PhoneAskHistory => Ok(0),
+        HostReq::PhoneModels | HostReq::PhoneStats => Ok(0),
         request => payload_len(request),
     }
 }

@@ -79,7 +79,6 @@ cepheus ctl scan [--scope TEXT] [host]  # Codex Security scan in a scratch workt
 cepheus ctl scans                       # saved scans and where each report is
 cepheus ctl install <source> [--agents claude,codex,agy] [--host NAME] [--dry-run] [--remove]
 cepheus ctl skills                      # MUTATION: sync bundled skills and agent links
-cepheus ask '<question>'                # a quick answer, no session (/web, /code choose who)
 ```
 
 - Use the configured start directory, or an explicit `--cwd` for the requested workspace.
@@ -174,7 +173,7 @@ for detailed connection work; keep credentials and signed URLs private.
 ## In the deck itself
 
 The user drives the same actions from the deck's `:` line (`:new codex
-worker`, `:term`, `:broadcast`, `:branches`, `:ask`, `:scan`, `:install`,
+worker`, `:term`, `:broadcast`, `:branches`, `:scan`, `:install`,
 `:skills sync`, `:reload`, `:help commands`). Its Lua scripting is described in
 the `cepheus-plugin` skill.
 
@@ -262,7 +261,7 @@ the configured provider and grant no merge/push/CI/deploy authority.
 Protocol 15 and `attention_capable` expose `:send --idle [N] [TEXT]`,
 `:decide TEXT` and `:supervisor` in the desktop. The phone retains Send when
 idle in chat; it has no Deliveries, Decisions or Supervisor tools pages. Existing
-Tab and F2/F3/F4 actions keep working.
+Tab and F2/F3 actions keep working.
 
 Use `ctl attention status '{}'` for metadata. Creating/retrying an idle intent
 requires protocol 17 on every selected endpoint. Before the first send, capture

@@ -368,7 +368,6 @@ fn phone_forwarding_rejects_noncontent_operations_before_reading_or_mutating() {
         (None, HostReq::PutFile { name: "oversize.txt".into(), len: uploads::FILE_MAX + 1 }),
         (Some("fedora"), HostReq::PhoneModels),
         (Some("fedora"), HostReq::PhoneStats),
-        (Some("fedora"), HostReq::PhoneAskHistory),
     ];
     for (host, request) in requests {
         let (mut viewer, server) = UnixStream::pair().unwrap();

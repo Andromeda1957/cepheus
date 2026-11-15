@@ -69,7 +69,7 @@ def seed(deck: m.Deck) -> tuple[Path, Path]:
         "        time.sleep(0.1)\n"
         "    raise SystemExit(0)\n"
         "if '-p' in args or '--print' in args or not sys.stdin.isatty():\n"
-        "    print('Fixture quick answer: forty two', flush=True)\n"
+        "    print('Fixture command completed', flush=True)\n"
         "    raise SystemExit(0)\n"
         "CHECK_START_DIR = os.getcwd()\n"
         + m.STAND_IN.replace("time.sleep(8)", "time.sleep(0.1)").replace(
@@ -83,11 +83,6 @@ def seed(deck: m.Deck) -> tuple[Path, Path]:
         config[f"{tool}_command"] = [str(agent)]
     config["dev_server_command"] = ["sleep", "60"]
     config["shell_command"] = ["/bin/sh"]
-    config["ask"] = {
-        "web": {"tool": "claude", "model": ""},
-        "code": {"tool": "claude", "model": ""},
-        "timeout": 20,
-    }
     scans = deck.root / "saved-scans"
     config["scans_dir"] = str(scans)
     deck.config.write_text(json.dumps(config))
@@ -312,17 +307,6 @@ class Journey:
         agents = [s["id"] for s in self.deck.sessions() if s["tool"] == "claude"]
         if len(agents) != 2:
             raise m.CheckFailed("Expected two synthetic Claude agents")
-
-        self.tools("Ask")
-        self.fill("Question", "What is forty two?")
-        self.tap("Ask")
-        self.d.wait("quick answer", timeout=60, contains="Fixture quick answer: forty two")
-        # Reopen so the visible question can only come from history, not the draft/result.
-        self.tools("Ask")
-        self.tap("Refresh history")
-        self.d.wait("saved question", contains="What is forty two?")
-        self.d.screenshot("ask-dark")
-        self.summary["ask_answer_and_history"] = True
 
         self.tools("Broadcast")
         self.fill("Message", "phone broadcast checkpoint")

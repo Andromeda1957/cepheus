@@ -1,38 +1,38 @@
 # Desktop screenshots
 
-Captured as native Foot terminal pixels from Cepheus's production ratatui renderer, using synthetic project data. No owner sessions, accounts or credentials appear. The pairing code is inert.
+Captured from the running public Cepheus binary and a real Codex client in an isolated demo repository. Foot draws the native terminal pixels; these are live TUI captures, with no handwritten conversation or renderer replay.
 
-The terminal uses JetBrainsMono Nerd Font at 12 pt and a near-black palette. The README workspace image uses a compact 120 × 34 viewport for readability; the full gallery uses 160 × 44. Bold text, dim text, ANSI colors, Nerd Font glyphs and terminal cell widths are drawn by Foot.
+The demo contains a small Git repository, a feature worktree, Markdown task sources, and a bounded coding task completed by Codex. Empty reports show facilities with no configured data. No owner sessions, project data, credentials, or private conversations appear.
 
-Regenerate with `python3 tools/capture_screenshots.py`, or replay offloaded buffers with `python3 tools/capture_screenshots.py --render-only CAPTURE_DIRECTORY`. Capture uses an empty, inactive Hyprland workspace (10 by default) and requires Foot, grim with toplevel capture, and JetBrainsMono Nerd Font.
+The terminal uses a 160 × 38 viewport, JetBrainsMono Nerd Font at 12 pt, and a near-black palette. Capture requires Foot, tmux, Hyprland, and grim with toplevel capture. See CONTRIBUTING.md for the isolated live capture workflow.
 
-## Workspace and hosted agent
+## Workspace with real Codex and project terminal
 
-![Workspace and hosted agent](desktop/01-workspace.png)
+![Workspace with real Codex and project terminal](desktop/01-workspace.png)
 
-## Typing in a hosted session
+## Typing in a real hosted Codex session
 
-![Typing in a hosted session](desktop/02-insert.png)
+![Typing in a real hosted Codex session](desktop/02-insert.png)
 
-## Command line
+## Cepheus command line
 
-![Command line](desktop/03-command.png)
+![Cepheus command line](desktop/03-command.png)
 
-## Session selection
+## Empty workspace before starting a session
 
-![Session selection](desktop/04-empty-pane.png)
+![Empty workspace before starting a session](desktop/04-empty.png)
 
-## New session
+## New session, model and effort
 
-![New session](desktop/05-new-session.png)
+![New session, model and effort](desktop/05-new-session.png)
 
 ## Help and key bindings
 
 ![Help and key bindings](desktop/06-help.png)
 
-## Errors
+## Errors from a demo Lua command
 
-![Errors](desktop/07-errors.png)
+![Errors from a demo Lua command](desktop/07-errors.png)
 
 ## Machine resources
 
@@ -42,101 +42,81 @@ Regenerate with `python3 tools/capture_screenshots.py`, or replay offloaded buff
 
 ![Provider usage](desktop/09-usage.png)
 
-## Branches and worktrees
+## Branches and real Git worktrees
 
-![Branches and worktrees](desktop/10-branches.png)
+![Branches and real Git worktrees](desktop/10-branches.png)
 
-## Security scans
+## Security scans (empty demo)
 
-![Security scans](desktop/11-scans.png)
+![Security scans (empty demo)](desktop/11-scans.png)
 
-## Broadcast
+## Broadcast while Codex works on the demo
 
-![Broadcast](desktop/12-broadcast.png)
+![Broadcast while Codex works on the demo](desktop/12-broadcast.png)
 
-## Service confirmation
+## Stop-service confirmation
 
-![Service confirmation](desktop/13-confirm.png)
+![Stop-service confirmation](desktop/13-confirmation.png)
 
-## Resume a saved conversation
+## Resume the demo conversation
 
-![Resume a saved conversation](desktop/14-resume.png)
+![Resume the demo conversation](desktop/14-resume.png)
 
-## Work queue
+## Paused work queue
 
-![Work queue](desktop/15-queue.png)
+![Paused work queue](desktop/15-queue.png)
 
-## Task sources
+## Live Markdown task source
 
-![Task sources](desktop/16-task-sources.png)
+![Live Markdown task source](desktop/16-task-sources.png)
 
-## Scheduled chores
+## Disabled scheduled chore
 
-![Scheduled chores](desktop/17-chores.png)
+![Disabled scheduled chore](desktop/17-chores.png)
 
-## Idle deliveries
+## Idle deliveries (empty demo)
 
-![Idle deliveries](desktop/18-attention.png)
+![Idle deliveries (empty demo)](desktop/18-attention.png)
 
-## Supervisor
+## Supervisor controls
 
-![Supervisor](desktop/19-supervisor.png)
+![Supervisor controls](desktop/19-supervisor.png)
 
-## Hosts report
+## Host configuration report
 
-![Hosts report](desktop/20-hosts.png)
+![Host configuration report](desktop/20-hosts.png)
 
-## Extension installation preview
+## Local extension installation preview
 
-![Extension installation preview](desktop/21-install-preview.png)
-
-## Quick questions and answers
-
-![Quick questions and answers](desktop/22-ask.png)
+![Local extension installation preview](desktop/21-install-preview.png)
 
 ## Idle message draft
 
 ![Idle message draft](desktop/23-idle-message.png)
 
-## Pair an Android device (inert example)
+## Android pairing with the gateway disabled
 
-![Pair an Android device (inert example)](desktop/24-pairing.png)
+![Android pairing with the gateway disabled](desktop/24-pairing.png)
 
-## Lua plugin picker
+## Agent plugin picker
 
-![Lua plugin picker](desktop/25-plugin-picker.png)
+![Agent plugin picker](desktop/25-agent-plugins.png)
 
-## Headless job output
+## Headless check job output
 
-![Headless job output](desktop/26-job-chat.png)
+![Headless check job output](desktop/26-job-chat.png)
 
-## Headless job raw log
+## Headless check job raw log
 
-![Headless job raw log](desktop/27-job-raw.png)
+![Headless check job raw log](desktop/27-job-raw.png)
 
-## Hosted shell
+## Project terminal running the real parser checks
 
-![Hosted shell](desktop/28-terminal.png)
+![Project terminal running the real parser checks](desktop/28-terminal.png)
 
-## Explicitly opened delivery response
+## Scheduler slots
 
-![Explicitly opened delivery response](desktop/29-private-response.png)
-
-## Help: sessions and hotkeys
-
-![Help: sessions and hotkeys](desktop/30-help-sessions.png)
-
-## Help: windows and jobs
-
-![Help: windows and jobs](desktop/31-help-windows.png)
-
-## Help: attention and commands
-
-![Help: attention and commands](desktop/32-help-commands.png)
-
-## Fleet scheduler slots
-
-![Fleet scheduler slots](desktop/33-fleet-slots.png)
+![Scheduler slots](desktop/33-fleet-slots.png)
 
 ## Command catalog
 
@@ -146,14 +126,74 @@ Regenerate with `python3 tools/capture_screenshots.py`, or replay offloaded buff
 
 ![Lua options](desktop/35-options.png)
 
-## Skills report
+## Available skills
 
-![Skills report](desktop/36-skills.png)
+![Available skills](desktop/36-skills.png)
 
-## Filter a window
+## Filtering the branch dashboard
 
-![Filter a window](desktop/37-search.png)
+![Filtering the branch dashboard](desktop/37-search.png)
 
-## Native cloud conversation
+## Tasks — Active
 
-![Native cloud conversation](desktop/38-cloud-chat.png)
+![Tasks — Active](desktop/39-tasks-active.png)
+
+## Tasks — All
+
+![Tasks — All](desktop/39-tasks-all.png)
+
+## Tasks — Merged
+
+![Tasks — Merged](desktop/39-tasks-merged.png)
+
+## Tasks — Open
+
+![Tasks — Open](desktop/39-tasks-open.png)
+
+## Tasks — Ready
+
+![Tasks — Ready](desktop/39-tasks-ready.png)
+
+## Tasks — Stopped
+
+![Tasks — Stopped](desktop/39-tasks-stopped.png)
+
+## Agent launch commands
+
+![Agent launch commands](desktop/40-launch.png)
+
+## Work queue help
+
+![Work queue help](desktop/41-queue-help.png)
+
+## Headless job help
+
+![Headless job help](desktop/42-job-help.png)
+
+## Idle delivery help
+
+![Idle delivery help](desktop/43-attention-help.png)
+
+## Delivery journal recovery report
+
+![Delivery journal recovery report](desktop/44-attention-recovery.png)
+
+## Supervisor rules (empty demo)
+
+![Supervisor rules (empty demo)](desktop/45-supervisor-rules.png)
+
+## API cost estimate from the private demo
+
+![API cost estimate from the private demo](desktop/46-api-cost.png)
+
+## API cost model details
+
+![API cost model details](desktop/47-api-cost-models.png)
+
+## Local extension removal preview
+
+![Local extension removal preview](desktop/48-uninstall-preview.png)
+
+## Completed headless jobs
+
+![Completed headless jobs](desktop/50-jobs.png)

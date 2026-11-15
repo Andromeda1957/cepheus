@@ -14,13 +14,11 @@ pub struct DialogViewport {
     selected: Option<usize>,
     /// Search is absent until `/` is pressed in the current window.
     pub search: Option<String>,
-    /// The quick-question answer Ctrl-y copies, marked while scrolled up.
-    pub pick: Option<usize>,
 }
 
 impl Default for DialogViewport {
     fn default() -> Self {
-        Self { kind: None, offset: 0, limit: usize::MAX, page: 10, selected: None, search: None, pick: None }
+        Self { kind: None, offset: 0, limit: usize::MAX, page: 10, selected: None, search: None }
     }
 }
 
@@ -77,17 +75,6 @@ impl Navigation {
             Self::Last => last,
         }
     }
-
-    fn reversed(self) -> Self {
-        match self {
-            Self::Up => Self::Down,
-            Self::Down => Self::Up,
-            Self::PageUp => Self::PageDown,
-            Self::PageDown => Self::PageUp,
-            Self::First => Self::Last,
-            Self::Last => Self::First,
-        }
-    }
 }
 
 /// A text reader scrolls rows like the session pane; a menu moves its
@@ -99,8 +86,7 @@ fn wheel_rows(dialog: &Dialog) -> usize {
         | Dialog::Usage
         | Dialog::Confirm { .. }
         | Dialog::Errors { .. }
-        | Dialog::Report { .. }
-        | Dialog::Ask { .. } => scroll::WHEEL_ROWS,
+        | Dialog::Report { .. } => scroll::WHEEL_ROWS,
         Dialog::Choose { pick, .. } if !pick.items.iter().any(|item| item.kind == crate::lua::ItemKind::Choice) => {
             scroll::WHEEL_ROWS
         }
@@ -120,17 +106,6 @@ impl App {
             self.wheel_scroll.reset();
             1
         };
-        // ↑ and ↓ bring back questions in the quick-question box; the
-        // wheel scrolls its answers.
-        if let Some(Dialog::Ask { scroll, .. }) = &mut self.dialog {
-            let rows = rows * gain;
-            *scroll = if up {
-                scroll.saturating_add(rows).min(self.dialog_viewport.limit)
-            } else {
-                scroll.saturating_sub(rows)
-            };
-            return;
-        }
         let key = KeyEvent::new(if up { KeyCode::Up } else { KeyCode::Down }, KeyModifiers::NONE);
         for _ in 0..rows * gain {
             self.dialog_key(key);
@@ -193,19 +168,6 @@ impl App {
 
     pub(super) fn navigate_dialog(&mut self, dialog: &mut Dialog, k: KeyEvent) -> bool {
         let ctrl = k.modifiers.contains(KeyModifiers::CONTROL);
-        if let Dialog::Ask { scroll, .. } = dialog {
-            // The other keys edit the question; ↑ and ↓ bring back earlier ones.
-            let nav = match k.code {
-                KeyCode::PageUp => Navigation::PageUp,
-                KeyCode::PageDown => Navigation::PageDown,
-                KeyCode::Home if ctrl => Navigation::First,
-                KeyCode::End if ctrl => Navigation::Last,
-                _ => return false,
-            };
-            let viewport = &self.dialog_viewport;
-            *scroll = nav.reversed().apply(*scroll, viewport.limit, viewport.page);
-            return true;
-        }
         let editing = match dialog {
             Dialog::Broadcast { .. } => true,
             _ => self.dialog_viewport.search.is_some(),
@@ -272,7 +234,6 @@ impl App {
                 viewport.offset = nav.apply(viewport.offset, viewport.limit, viewport.page);
             }
             Dialog::Errors { scroll } | Dialog::Report { scroll, .. } => move_to(scroll, viewport.limit),
-            Dialog::Ask { .. } => return false,
             Dialog::Picker { items, sel, filter, .. } => {
                 move_to(sel, App::picker_matches(items, filter).len().saturating_sub(1));
             }
