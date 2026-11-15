@@ -153,6 +153,12 @@ fn failures_reconnect_with_growing_pauses_and_none_waits_for_the_owner() {
     }
     let last = shown.lock().unwrap().last().cloned().flatten();
     assert_eq!(last.as_deref(), Some("Native ChatGPT login is unavailable. Retrying automatically."));
+    // A recovered room clears the failure even when no messages changed;
+    // idle Dot need not produce another message to remove its old error.
+    worker.messages = json!([]);
+    worker.opened(snapshot(json!([])));
+    assert!(matches!(worker.link, Link::Open(_)));
+    assert_eq!(shown.lock().unwrap().last(), Some(&None));
 }
 
 // The chat refreshes when the host announces a live activity change, not
